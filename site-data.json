@@ -1,0 +1,68 @@
+{
+  "catalog": [
+    {
+      "category": "Vins & spiritueux",
+      "products": [
+        {
+          "sku": "VIN-BDX-R-075",
+          "title": "Bordeaux AOC Rouge 0,75 L",
+          "subtitle": "Cuvée signature",
+          "price_eur": 19.0,
+          "age_gate": true,
+          "shipping_flags": [
+            "alcohol",
+            "fragile"
+          ],
+          "images": [
+            "https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?q=80&w=1200&auto=format&fit=crop"
+          ]
+        },
+        {
+          "sku": "VIN-CHMP-BRUT-075",
+          "title": "Champagne Brut 0,75 L",
+          "subtitle": "Non-millésimé",
+          "price_eur": 39.0,
+          "age_gate": true,
+          "shipping_flags": [
+            "alcohol",
+            "fragile"
+          ],
+          "images": [
+            "https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?q=80&w=1200&auto=format&fit=crop"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Foie gras & terrines",
+      "products": [
+        {
+          "sku": "FOG-ENT-180",
+          "title": "Foie gras de canard entier 180 g",
+          "subtitle": "Bocal premium",
+          "price_eur": 49.0,
+          "images": [
+            "https://images.unsplash.com/photo-1623065425909-0d4fba07f657?q=80&w=1200&auto=format&fit=crop"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Multimedia",
+      "products": [
+        {
+          "sku": "PHN-IPH-PRO-256",
+          "title": "Smartphone iPhone Pro 256 Go",
+          "subtitle": "Écran haute fréquence",
+          "price_eur": 1299.0,
+          "shipping_flags": [
+            "fragile"
+          ],
+          "images": [
+            "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=1200&auto=format&fit=crop"
+          ]
+        }
+      ]
+    }
+  ]
+}

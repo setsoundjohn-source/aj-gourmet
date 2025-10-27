@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alain Janoleviah Gourmet — Spécialités françaises livrées dans le monde</title>
+  <meta name="description" content="Caviar, foie gras, vins & épicerie fine. Expédition mondiale avec tarifs de livraison en temps réel au paiement. Service premium pour particuliers." />
+  <meta property="og:title" content="Alain Janoleviah Gourmet" />
+  <meta property="og:description" content="Le meilleur de la gastronomie française, livré partout dans le monde." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/hero.jpg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/logo_C_emblem_dark_32.png">
+  <link rel="icon" type="image/png" sizes="180x180" href="assets/logo_C_emblem_dark_180.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/logo_C_emblem_dark_512.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- ✅ MOVE SITE DATA EARLY: ensures it's available before any parsing -->
+  <script id="site-data" type="application/json">{
+    "brand":{"name":"Alain Janoleviah Gourmet","domain":"alainjanoleviahgourmet.com","logo":{"primary_svg":"assets/logo_A_dark.svg","primary_png":"assets/logo_A_header_dark.png","emblem_svg":"assets/logo_C_emblem_dark.svg","favicons":{"512":"assets/logo_C_emblem_dark_512.png","180":"assets/logo_C_emblem_dark_180.png","32":"assets/logo_C_emblem_dark_32.png"}},"tagline":"","colors":{"primary":"#0B0B0F","secondary":"#F5F5F7","accent":"#CBA135","accent_alt":"#701A1A","background":"#0B0B0F","text":"#F5F5F7"},"typography":{"heading":"Playfair Display","body":"Inter"},"tone":"premium"},
+    "catalog":[
+      {"category":"Charcuterie & salaisons","products":[
+        {"sku":"SAL-NAT-250","title":"Saucisson sec pur porc 250 g","subtitle":"Recette traditionnelle","price_eur":8.9,"tax_included":true,"net_weight_g":250,"package_size_cm":[20,10,6],"gross_weight_kg":0.35,"volumetric_weight_kg":0.24,"ingredients":"Porc, sel, poivre, épices","allergens":[],"origin_region":"Auvergne","labels":[],"storage":"ambiant","dlc_dluo":"P6M","hs_code":"160100","shipping_flags":[],"images":["https://images.unsplash.com/photo-1604908554049-9be5f3a850e3?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"SAL-TRUF-250","title":"Saucisson sec à la truffe 250 g","subtitle":"Arômes délicats de truffe","price_eur":14.9,"tax_included":true,"net_weight_g":250,"package_size_cm":[20,10,6],"gross_weight_kg":0.35,"volumetric_weight_kg":0.24,"ingredients":"Porc, truffe, sel, poivre","allergens":[],"origin_region":"Provence","labels":[],"storage":"ambiant","dlc_dluo":"P6M","hs_code":"160100","shipping_flags":[],"images":["https://images.unsplash.com/photo-1625944621729-6d9b570b2ed1?q=80&w=1200&auto=format&fit=crop"]}
+      ]},
+      {"category":"Foie gras & terrines","products":[
+        {"sku":"FOG-ENT-180","title":"Foie gras de canard entier 180 g","subtitle":"Bocal premium","price_eur":49.0,"tax_included":true,"net_weight_g":180,"package_size_cm":[12,12,10],"gross_weight_kg":0.55,"volumetric_weight_kg":0.29,"ingredients":"Foie gras de canard, sel, poivre","allergens":[],"origin_region":"Sud-Ouest","labels":["IGP"],"storage":"ambiant","dlc_dluo":"P12M","hs_code":"160232","shipping_flags":[],"images":["https://images.unsplash.com/photo-1623065425909-0d4fba07f657?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"FOG-BLOC-200","title":"Foie gras de canard bloc 200 g","subtitle":"Texture onctueuse","price_eur":32.0,"tax_included":true,"net_weight_g":200,"package_size_cm":[14,8,8],"gross_weight_kg":0.4,"volumetric_weight_kg":0.18,"ingredients":"Foie gras de canard, eau, sel, poivre","allergens":[],"origin_region":"Sud-Ouest","labels":[],"storage":"ambiant","dlc_dluo":"P12M","hs_code":"160232","shipping_flags":[],"images":["https://images.unsplash.com/photo-1608710928290-8bd2e6a4a7b9?q=80&w=1200&auto=format&fit=crop"]}
+      ]},
+      {"category":"Caviar & fumaisons","products":[
+        {"sku":"CAV-BAE-30","title":"Caviar Baeri 30 g","subtitle":"Grains fins","price_eur":69.0,"tax_included":true,"net_weight_g":30,"package_size_cm":[10,10,6],"gross_weight_kg":0.2,"volumetric_weight_kg":0.12,"ingredients":"Œufs d’esturgeon, sel","allergens":["poisson"],"origin_region":"Aquitaine","labels":[],"storage":"frais","dlc_dluo":"P3M","hs_code":"160431","shipping_flags":["perishable","fragile"],"images":["https://images.unsplash.com/photo-1614112213922-5a7e7fe61a58?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"CAV-OSC-50","title":"Caviar Oscietra 50 g","subtitle":"Notes de noisette","price_eur":139.0,"tax_included":true,"net_weight_g":50,"package_size_cm":[12,12,6],"gross_weight_kg":0.25,"volumetric_weight_kg":0.17,"ingredients":"Œufs d’esturgeon, sel","allergens":["poisson"],"origin_region":"Nouvelle-Aquitaine","labels":[],"storage":"frais","dlc_dluo":"P3M","hs_code":"160431","shipping_flags":["perishable","fragile"],"images":["https://images.unsplash.com/photo-1619533394724-1cbbd10b9d65?q=80&w=1200&auto=format&fit=crop"]}
+      ]},
+      {"category":"Vins & spiritueux","products":[
+        {"sku":"VIN-BDX-R-075","title":"Bordeaux AOC Rouge 0,75 L","subtitle":"Cuvée signature","price_eur":19.0,"tax_included":true,"net_weight_g":750,"package_size_cm":[33,10,10],"gross_weight_kg":1.6,"volumetric_weight_kg":0.66,"origin_region":"Bordeaux","labels":["AOC"],"storage":"ambiant","dlc_dluo":"N/A","hs_code":"220421","shipping_flags":["alcohol","fragile"],"age_gate":true,"images":["https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"VIN-CHMP-BRUT-075","title":"Champagne Brut 0,75 L","subtitle":"Non-millésimé","price_eur":39.0,"tax_included":true,"net_weight_g":750,"package_size_cm":[33,11,11],"gross_weight_kg":1.8,"volumetric_weight_kg":0.8,"origin_region":"Champagne","labels":["AOC"],"storage":"ambiant","dlc_dluo":"N/A","hs_code":"220421","shipping_flags":["alcohol","fragile"],"age_gate":true,"images":["https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"SPI-COG-VSOP-070","title":"Cognac VSOP 0,7 L","subtitle":"Élevage en fûts","price_eur":59.0,"tax_included":true,"net_weight_g":700,"package_size_cm":[32,10,10],"gross_weight_kg":1.5,"volumetric_weight_kg":0.64,"origin_region":"Cognac","labels":[],"storage":"ambiant","dlc_dluo":"N/A","hs_code":"220820","shipping_flags":["alcohol","fragile"],"age_gate":true,"images":["https://images.unsplash.com/photo-1586999687730-80ed03c08b26?q=80&w=1200&auto=format&fit=crop"]}
+      ]},
+      {"category":"Épicerie sucrée & salée","products":[
+        {"sku":"COND-MOUT-DIJ-200","title":"Moutarde de Dijon 200 g","subtitle":"Goût authentique","price_eur":4.9,"tax_included":true,"net_weight_g":200,"package_size_cm":[9,6,6],"gross_weight_kg":0.35,"volumetric_weight_kg":0.07,"ingredients":"Eau, graines de moutarde, vinaigre, sel","allergens":["moutarde"],"origin_region":"Bourgogne","labels":[],"storage":"ambiant","dlc_dluo":"P12M","hs_code":"210330","shipping_flags":[],"images":["https://images.unsplash.com/photo-1551024709-8f23befc6cf7?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"CONF-FIG-250","title":"Confiture de figues 250 g","subtitle":"Cuisson douce","price_eur":6.9,"tax_included":true,"net_weight_g":250,"package_size_cm":[9,7,7],"gross_weight_kg":0.45,"volumetric_weight_kg":0.09,"ingredients":"Figues, sucre, pectine","allergens":[],"origin_region":"Provence","labels":[],"storage":"ambiant","dlc_dluo":"P18M","hs_code":"200799","shipping_flags":[],"images":["https://images.unsplash.com/photo-1570197571499-166b36435e9f?q=80&w=1200&auto=format&fit=crop"]}
+      ]},
+      {"category":"Coffrets cadeaux","products":[
+        {"sku":"BOX-APERO-001","title":"Coffret Apéro Français","subtitle":"Sélection conviviale","price_eur":69.0,"tax_included":true,"net_weight_g":1300,"package_size_cm":[35,25,12],"gross_weight_kg":1.8,"volumetric_weight_kg":2.1,"contents":["SAL-NAT-250","COND-MOUT-DIJ-200","VIN-BDX-R-075","Cornichons 210 g"],"shipping_flags":["fragile","alcohol"],"age_gate":true,"images":["https://images.unsplash.com/photo-1551024709-8f23befc6cf7?q=80&w=1200&auto=format&fit=crop"]}
+      ]},
+      {"category":"Multimedia","note":"Dernières versions — aucune restriction de livraison, y compris Amérique du Sud","products":[
+        {"sku":"PHN-IPH-PRO-256","title":"Smartphone iPhone Pro 256 Go","subtitle":"Écran haute fréquence, photo avancée","price_eur":1299.0,"tax_included":true,"specs":{"storage":"256 Go","screen":"6.1–6.7\"","connectivity":"5G","region_bands":"global"},"package_size_cm":[18,10,6],"gross_weight_kg":0.6,"volumetric_weight_kg":0.22,"hs_code":"851713","shipping_flags":["fragile"],"images":["https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"PHN-SAM-S-ULTRA-256","title":"Smartphone Samsung Galaxy S Ultra 256 Go","subtitle":"Zoom longue portée","price_eur":1199.0,"tax_included":true,"specs":{"storage":"256 Go","screen":"6.8\"","connectivity":"5G"},"package_size_cm":[18,10,6],"gross_weight_kg":0.62,"volumetric_weight_kg":0.22,"hs_code":"851713","shipping_flags":["fragile"],"images":["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"EAR-TWS-PREM","title":"Écouteurs True Wireless premium","subtitle":"Réduction de bruit avancée","price_eur":199.0,"tax_included":true,"specs":{"battery":"24 h","charging":"USB-C / sans fil"},"package_size_cm":[12,9,5],"gross_weight_kg":0.25,"volumetric_weight_kg":0.11,"hs_code":"851830","shipping_flags":[],"images":["https://images.unsplash.com/photo-1585386959984-a4155223165f?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"WATCH-PREM-45","title":"Montre connectée 45 mm","subtitle":"Santé & sport, GPS","price_eur":449.0,"tax_included":true,"specs":{"size":"45 mm","water":"50 m"},"package_size_cm":[12,12,8],"gross_weight_kg":0.4,"volumetric_weight_kg":0.15,"hs_code":"851762","shipping_flags":[],"images":["https://images.unsplash.com/photo-1511735111819-9a3f7709049c?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"TAB-11-256","title":"Tablette 11\" 256 Go","subtitle":"Écran haut débit, stylet compatible","price_eur":799.0,"tax_included":true,"specs":{"screen":"11\"","storage":"256 Go"},"package_size_cm":[28,20,6],"gross_weight_kg":0.9,"volumetric_weight_kg":0.67,"hs_code":"847130","shipping_flags":["fragile"],"images":["https://images.unsplash.com/photo-1510554298352-53f3b5f4f025?q=80&w=1200&auto=format&fit=crop"]},
+        {"sku":"LAP-14-PRO","title":"Ordinateur portable 14\" Pro","subtitle":"Châssis léger, performance avancée","price_eur":1799.0,"tax_included":true,"specs":{"screen":"14\"","ram":"16 Go","storage":"512 Go SSD"},"package_size_cm":[40,30,8],"gross_weight_kg":2.1,"volumetric_weight_kg":1.92,"hs_code":"847130","shipping_flags":["fragile"],"images":["https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop"]}
+      ]}
+    ]
+  }</script>
+
+  <style>
+    :root{
+      --bg:#0B0B0F; --fg:#F5F5F7; --gold:#CBA135; --bordeaux:#701A1A; --muted:#9CA3AF;
+      --card:rgba(255,255,255,.04); --line:rgba(255,255,255,.1);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    a{color:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;z-index:50;background:rgba(11,11,15,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{display:block;width:220px;max-width:60vw}
+    .logo svg{width:100%;height:auto;display:block}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .btn, button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--fg);padding:10px 14px;border-radius:12px;font-weight:600;cursor:pointer}
+    .btn:hover,button:hover{background:rgba(255,255,255,.06)}
+    .pill{border-radius:999px;padding:8px 12px}
+    main{display:block}
+    .hero{padding:54px 0 32px;border-bottom:1px solid var(--line)}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px}
+    .hero h1{font-family:"Playfair Display",serif;font-weight:700;line-height:1.08;margin:0 0 12px;font-size:clamp(28px,4vw,48px)}
+    .sub{opacity:.9;margin:0 0 18px}
+    .cta{display:flex;gap:10px;flex-wrap:wrap}
+    .primary{background:var(--gold);border-color:var(--gold);color:#111}
+    .primary:hover{filter:brightness(1.05)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+    .shadow{box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .imgbox{border-radius:16px;overflow:hidden;height:100%;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));display:grid;place-items:center;min-height:220px}
+    .value{padding:34px 0}
+    .value h2,.section h2{font-family:"Playfair Display",serif;font-size:clamp(22px,3vw,32px);margin:0 0 16px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .feat{padding:24px 0}
+    .gridcats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .cat{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--line)}
+    .cat img{width:100%;height:220px;object-fit:cover;display:block;filter:saturate(.9)}
+    .cat .cap{position:absolute;left:12px;bottom:12px;background:rgba(11,11,15,.6);backdrop-filter:blur(6px);padding:10px 12px;border-radius:12px;border:1px solid var(--line);font-weight:700}
+    .section{padding:34px 0}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .product{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+    .product img{width:100%;height:200px;object-fit:cover}
+    .pbody{padding:14px;display:flex;flex-direction:column;gap:10px}
+    .price{font-weight:800}
+    .muted{color:var(--muted)}
+    footer{border-top:1px solid var(--line);padding:28px 0;margin-top:36px}
+    .footergrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px}
+    .lang{display:flex;gap:6px}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(203,161,53,.12);border:1px solid rgba(203,161,53,.35);color:var(--gold);padding:8px 12px;border-radius:999px;font-weight:700;font-size:.9rem}
+    .notice{font-size:.9rem;opacity:.9}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:20px}
+    .modal.active{display:flex}
+    .modal .panel{background:#111214;border:1px solid var(--line);border-radius:18px;max-width:520px;width:100%;padding:20px}
+
+    @media (max-width:960px){
+      .hero-grid{grid-template-columns:1fr}
+      .grid3,.gridcats,.grid{grid-template-columns:1fr}
+      .footergrid{grid-template-columns:1fr}
+      .logo{width:180px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="logo" href="#" aria-label="Alain Janoleviah Gourmet — Accueil">
+        <!-- Inline SVG Logo A (no subtitle) -->
+        <svg viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Alain Janoleviah Gourmet">
+          <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#F5F5F7" font-size="62" font-family="'Playfair Display', Georgia, serif" letter-spacing="2">ALAIN JANOLEVIAH</text>
+        </svg>
+      </a>
+      <div class="nav-actions">
+        <div class="lang" aria-label="Sélecteur de langue">
+          <button class="btn pill" data-lang="fr">FR</button>
+          <button class="btn pill" data-lang="en">EN</button>
+        </div>
+        <a class="btn" href="#catalogue">Catalogue</a>
+        <a class="btn" href="#contact">Contact</a>
+        <a class="btn" href="#cart" aria-label="Panier">🛒</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="card shadow">
+          <h1 data-i18n-fr="Le meilleur de la gastronomie française, livré partout dans le monde" data-i18n-en="The finest French gastronomy, delivered worldwide">Le meilleur de la gastronomie française, livré partout dans le monde</h1>
+          <p class="sub" data-i18n-fr="Tarifs de livraison en temps réel au paiement. Service premium." data-i18n-en="Live shipping rates at checkout. Premium service.">Tarifs de livraison en temps réel au paiement. Service premium.</p>
+          <div class="cta">
+            <a class="btn primary" href="#featured" data-i18n-fr="Découvrir la sélection" data-i18n-en="Discover the selection">Découvrir la sélection</a>
+            <a class="btn" href="#vins" data-i18n-fr="Vins & spiritueux" data-i18n-en="Wines & spirits">Vins & spiritueux</a>
+          </div>
+          <div style="margin-top:14px" class="badge">✓ Tarifs transporteurs en direct (EasyPost)</div>
+        </div>
+        <div class="imgbox">
+          <div style="font-family:'Playfair Display',serif;text-align:center">
+            <div style="font-size:28px;color:var(--gold);margin-bottom:8px">Sélection Signature</div>
+            <div style="opacity:.9">Foie gras • Caviar • Vins • Coffrets</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUE PROPS -->
+    <section class="value">
+      <div class="container">
+        <h2>Pourquoi choisir AJ Gourmet ?</h2>
+        <div class="grid3">
+          <div class="card"><strong>Tarifs live</strong><br><span class="muted">Comparateur transporteurs au paiement</span></div>
+          <div class="card"><strong>Qualité authentique</strong><br><span class="muted">Labels AOP/IGP, sélection terroir</span></div>
+          <div class="card"><strong>Emballage premium</strong><br><span class="muted">Cadeaux & protection renforcée</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED CATEGORIES -->
+    <section class="feat" id="featured">
+      <div class="container">
+        <h2>Catégories à la une</h2>
+        <div class="gridcats">
+          <a class="cat" href="#vins">
+            <img src="https://images.unsplash.com/photo-1514363187811-06e5f2b3b6d6?q=80&w=1600&auto=format&fit=crop" alt="Vins & spiritueux"/>
+            <div class="cap">Vins & spiritueux</div>
+          </a>
+          <a class="cat" href="#luxe">
+            <img src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=1600&auto=format&fit=crop" alt="Foie gras & caviar"/>
+            <div class="cap">Foie gras & caviar</div>
+          </a>
+          <a class="cat" href="#multimedia">
+            <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1600&auto=format&fit=crop" alt="Multimedia"/>
+            <div class="cap">Multimedia</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATALOG GRID (EXCERPT) -->
+    <section class="section" id="catalogue">
+      <div class="container">
+        <h2>Catalogue</h2>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <!-- CHECKOUT DEMO (SHIPPING RATES PLACEHOLDER) -->
+    <section class="section">
+      <div class="container card">
+        <h2>Estimation d'expédition</h2>
+        <div class="grid3" style="grid-template-columns:2fr 1fr 1fr">
+          <div>
+            <label>Destination</label>
+            <input id="country" class="btn" style="width:100%" placeholder="Ex: US, FR, BR"/>
+          </div>
+          <div>
+            <label>Poids (kg)</label>
+            <input id="weight" class="btn" type="number" step="0.1" value="1.6" style="width:100%" />
+          </div>
+          <div style="display:flex;align-items:flex-end">
+            <button id="quote" class="btn primary" style="width:100%">Obtenir les tarifs</button>
+          </div>
+        </div>
+        <div id="rates" style="margin-top:12px" class="notice">Saisissez une destination pour simuler des tarifs multi-transporteurs (démo).</div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="contact">
+    <div class="container footergrid">
+      <div>
+        <div class="badge">ALAIN JANOLEVIAH</div>
+        <p class="notice">© Alain Janoleviah Gourmet — France. Tous droits réservés.</p>
+        <p class="notice">Mentions légales · CGV · Confidentialité</p>
+      </div>
+      <div>
+        <strong>Liens</strong>
+        <ul>
+          <li><a href="#catalogue">Catalogue</a></li>
+          <li><a href="#b2b">B2B (prochainement)</a></li>
+          <li><a href="#legal">Légal</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong>Contact</strong>
+        <p class="notice">Email : contact@alainjanoleviahgourmet.com</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AGE GATE (alcool) -->
+  <div class="modal" id="ageGate">
+    <div class="panel">
+      <h3 style="margin:0 0 6px">Accès réservé</h3>
+      <p class="notice">Avez-vous 18 ans ou plus ?</p>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
+        <button class="btn" onclick="document.getElementById('ageGate').classList.remove('active')">Oui</button>
+        <button class="btn" onclick="alert('Désolé, contenu alcool non disponible.');">Non</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ MAIN SCRIPT: runs after DOM is ready and after site-data is present -->
+  <script>
+  (function(){
+    function safeParseSiteData(){
+      const el = document.getElementById('site-data');
+      if(!el){
+        console.error('[AJG] site-data introuvable.');
+        return null;
+      }
+      try {
+        return JSON.parse(el.textContent || '{}');
+      } catch(e){
+        console.error('[AJG] JSON invalide dans site-data:', e);
+        return null;
+      }
+    }
+
+    function render(){
+      const data = safeParseSiteData();
+      const grid = document.getElementById('grid');
+      if(!grid){
+        console.warn('[AJG] Grille #grid introuvable.');
+        return;
+      }
+
+      // Placeholder visuel si une image manque
+      const PLACEHOLDER = 'https://images.unsplash.com/photo-1514860932651-0149f3f39a14?q=80&w=1200&auto=format&fit=crop';
+
+      if(!data || !Array.isArray(data.catalog)){
+        grid.innerHTML = '<div class="card">Aucune donnée catalogue disponible. Veuillez vérifier la balise <code>site-data</code>.</div>';
+        return;
+      }
+
+      // Aplatir le catalogue en produits simples pour la grille
+      const PRODUCTS = [];
+      for(const cat of data.catalog){
+        const catName = cat.category || 'Divers';
+        const list = Array.isArray(cat.products) ? cat.products : [];
+        for(const p of list){
+          PRODUCTS.push({
+            sku: p.sku,
+            title: p.title,
+            cat: catName,
+            price: p.price_eur || p.price || 0,
+            flags: (p.shipping_flags||[]).concat(p.age_gate?['alcohol']:[]),
+            img: (p.images && p.images[0]) || PLACEHOLDER
+          });
+        }
+      }
+
+      grid.innerHTML = '';
+      for(const p of PRODUCTS){
+        const el = document.createElement('article');
+        el.className = 'product';
+        el.innerHTML = `
+          <img src="${p.img}" alt="${p.title}"/>
+          <div class="pbody">
+            <div class="muted">${p.cat}</div>
+            <div style="font-weight:700">${p.title}</div>
+            <div class="price">${(Number(p.price)||0).toFixed(2)} €</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">${p.flags.map(f=>`<span class="pill muted" style="border:1px solid var(--line)">${f}</span>`).join('')}</div>
+            <div style="display:flex;gap:10px;margin-top:6px">
+              <button class="btn" data-add="${p.sku}">Ajouter</button>
+              ${p.flags.includes('alcohol')? '<button class="btn" data-age>18+</button>':''}
+            </div>
+          </div>`;
+        grid.appendChild(el);
+      }
+
+      // Bind actions
+      grid.addEventListener('click', (e)=>{
+        const btn = e.target.closest('[data-add]');
+        if(btn){
+          alert('Ajouté au panier: '+btn.getAttribute('data-add'));
+        }
+        if(e.target.closest('[data-age]')){
+          document.getElementById('ageGate').classList.add('active');
+        }
+      });
+
+      // Language switch (FR/EN)
+      document.querySelectorAll('[data-lang]').forEach(btn=>{
+        btn.addEventListener('click', ()=> switchLang(btn.getAttribute('data-lang')))
+      });
+      function switchLang(lang){
+        document.querySelectorAll('[data-i18n-'+lang+']').forEach(el=>{ el.textContent = el.getAttribute('data-i18n-'+lang); });
+      }
+
+      // Shipping quote demo (placeholder logic)
+      const quoteBtn = document.getElementById('quote');
+      if(quoteBtn){
+        quoteBtn.addEventListener('click', ()=>{
+          const cc = (document.getElementById('country').value||'').toUpperCase().trim();
+          const w = Math.max(0.1, parseFloat(document.getElementById('weight').value||'1'));
+          const base = 6.5; // base €/kg (mock)
+          const zone = (["US","CA","MX"].includes(cc)?1.2 : ["BR","AR","CL","UY","CO","PA","CR","GT"].includes(cc)?1.35 : ["AE","QA","KW","SA"].includes(cc)?1.3 : ["SG","HK","JP","KR","AU","NZ"].includes(cc)?1.25 : ["FR","DE","CH","AT","NL","BE","LU","DK","SE","NO","FI","IE","UK","MC","IT","ES","PT"].includes(cc)?1.0 : 1.4);
+          const estimates = [
+            {carrier:'DHL Express', days:'2-4', price: (base*w*zone+9).toFixed(2)},
+            {carrier:'UPS Worldwide Saver', days:'3-5', price: (base*w*zone+7).toFixed(2)},
+            {carrier:'FedEx Intl', days:'3-6', price: (base*w*zone+8).toFixed(2)}
+          ];
+          document.getElementById('rates').innerHTML = '<strong>Tarifs estimés :</strong> '+estimates.map(r=>`${r.carrier} ${r.days}j — <b>${r.price}€</b>`).join(' · ') + ' <span class="muted">(démo)</span>';
+        });
+      }
+
+      // --- Minimal test suite ---
+      runTests({data, grid, PRODUCTS});
+    }
+
+    function runTests(ctx){
+      const results = [];
+      const {data, grid, PRODUCTS} = ctx;
+      // T1: site-data present
+      results.push({name:'T1: #site-data présent', pass: !!document.getElementById('site-data')});
+      // T2: JSON parse OK & catalog array
+      results.push({name:'T2: JSON valide & catalog[]', pass: !!(data && Array.isArray(data.catalog) && data.catalog.length>0)});
+      // T3: grid exists
+      results.push({name:'T3: #grid existe', pass: !!grid});
+      // T4: products rendered count > 0
+      const rendered = grid ? grid.children.length : 0;
+      results.push({name:'T4: Produits rendus (>0)', pass: rendered>0, info:`count=${rendered}`});
+      // T5: sample product by SKU exists
+      const hasBdx = Array.from(grid.querySelectorAll('.product .pbody')).some(el=>/Bordeaux AOC Rouge/.test(el.textContent));
+      results.push({name:'T5: Présence Bordeaux AOC Rouge', pass: hasBdx});
+      // T6: age-gate button exists for alcohol products
+      const ageButtons = grid.querySelectorAll('.product [data-age]').length;
+      results.push({name:'T6: Bouton 18+ pour alcool', pass: ageButtons>0, info:`found=${ageButtons}`});
+
+      // Render tests panel
+      const panel = document.createElement('details');
+      panel.open = false;
+      panel.style.cssText = 'max-width:1200px;margin:20px auto;padding:12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03)';
+      const sum = results.filter(r=>r.pass).length + '/' + results.length;
+      panel.innerHTML = `<summary><b>Tests intégrés</b> — ${sum} OK</summary>` +
+        '<ul style="margin:10px 0 0 20px">' + results.map(r=>`<li>${r.pass? '✅' : '❌'} ${r.name}${r.info? ' — <span class="muted">'+r.info+'</span>' : ''}</li>`).join('') + '</ul>';
+      document.body.appendChild(panel);
+      console.table(results);
+    }
+
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', render);
+    } else {
+      render();
+    }
+  })();
+  </script>
+</body>
+</html>
