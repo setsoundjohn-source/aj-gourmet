@@ -200,26 +200,38 @@
       </div>
     </section>
 
-    <!-- CHECKOUT DEMO (SHIPPING RATES PLACEHOLDER) -->
-    <section class="section">
-      <div class="container card">
-        <h2>Estimation d'expédition</h2>
-        <div class="grid3" style="grid-template-columns:2fr 1fr 1fr">
-          <div>
-            <label>Destination</label>
-            <input id="country" class="btn" style="width:100%" placeholder="Ex: US, FR, BR"/>
-          </div>
-          <div>
-            <label>Poids (kg)</label>
-            <input id="weight" class="btn" type="number" step="0.1" value="1.6" style="width:100%" />
-          </div>
-          <div style="display:flex;align-items:flex-end">
-            <button id="quote" class="btn primary" style="width:100%">Obtenir les tarifs</button>
-          </div>
-        </div>
-        <div id="rates" style="margin-top:12px" class="notice">Saisissez une destination pour simuler des tarifs multi-transporteurs (démo).</div>
+    <!-- CHECKOUT (API) -->
+<section class="section">
+  <div class="container card">
+    <h2>Estimation d'expédition</h2>
+    <div class="grid3" style="grid-template-columns:1.2fr 1fr 1fr 1fr">
+      <div>
+        <label>Destination (pays)</label>
+        <input id="country" class="btn" style="width:100%" placeholder="Ex: FR, US, BR" />
       </div>
-    </section>
+      <div>
+        <label>Code postal</label>
+        <input id="postal" class="btn" style="width:100%" placeholder="Ex: 75008" />
+      </div>
+      <div>
+        <label>Poids (kg)</label>
+        <input id="weight" class="btn" type="number" step="0.1" value="1.2" style="width:100%" />
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button id="quote" class="btn primary" style="width:100%">Obtenir les tarifs</button>
+      </div>
+    </div>
+
+    <div id="rates" style="margin-top:12px" class="notice">
+      Saisissez une destination pour obtenir des tarifs multi-transporteurs (via API).
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button id="checkout" class="btn">Payer (démo Stripe)</button>
+      <span class="notice">Le paiement de test ouvre une page Stripe (clés de test).</span>
+    </div>
+  </div>
+</section>
 
   </main>
 
@@ -345,22 +357,63 @@
         document.querySelectorAll('[data-i18n-'+lang+']').forEach(el=>{ el.textContent = el.getAttribute('data-i18n-'+lang); });
       }
 
-      // Shipping quote demo (placeholder logic)
-      const quoteBtn = document.getElementById('quote');
-      if(quoteBtn){
-        quoteBtn.addEventListener('click', ()=>{
-          const cc = (document.getElementById('country').value||'').toUpperCase().trim();
-          const w = Math.max(0.1, parseFloat(document.getElementById('weight').value||'1'));
-          const base = 6.5; // base €/kg (mock)
-          const zone = (["US","CA","MX"].includes(cc)?1.2 : ["BR","AR","CL","UY","CO","PA","CR","GT"].includes(cc)?1.35 : ["AE","QA","KW","SA"].includes(cc)?1.3 : ["SG","HK","JP","KR","AU","NZ"].includes(cc)?1.25 : ["FR","DE","CH","AT","NL","BE","LU","DK","SE","NO","FI","IE","UK","MC","IT","ES","PT"].includes(cc)?1.0 : 1.4);
-          const estimates = [
-            {carrier:'DHL Express', days:'2-4', price: (base*w*zone+9).toFixed(2)},
-            {carrier:'UPS Worldwide Saver', days:'3-5', price: (base*w*zone+7).toFixed(2)},
-            {carrier:'FedEx Intl', days:'3-6', price: (base*w*zone+8).toFixed(2)}
-          ];
-          document.getElementById('rates').innerHTML = '<strong>Tarifs estimés :</strong> '+estimates.map(r=>`${r.carrier} ${r.days}j — <b>${r.price}€</b>`).join(' · ') + ' <span class="muted">(démo)</span>';
-        });
-      }
+     // Shipping quote via API (Vercel)
+const q = (s)=>document.querySelector(s);
+
+// Format jolis tarifs
+function renderRates(data){
+  if(!data) return 'Aucune réponse.';
+  if(data.error) return `Erreur: ${data.error}`;
+  const mode = data.mode || 'demo';
+  const rates = Array.isArray(data.rates) ? data.rates : [];
+  if(!rates.length) return `Aucun tarif retourné (${mode}).`;
+  return `<strong>Tarifs (${mode}) :</strong> ` + 
+    rates.map(r=>`${r.carrier} ${r.service||''} ${r.days? r.days+'j ' : ''}— <b>${Number(r.price_eur).toFixed(2)}€</b>`).join(' · ');
+}
+
+const quoteBtn = q('#quote');
+if (quoteBtn){
+  quoteBtn.addEventListener('click', async ()=>{
+    const country = (q('#country')?.value || 'FR').trim().toUpperCase();
+    const postal  = (q('#postal')?.value  || '75008').trim();
+    const weight  = Math.max(0.1, parseFloat(q('#weight')?.value || '1.2'));
+
+    q('#rates').textContent = 'Calcul en cours…';
+    try{
+      const res = await fetch('/api/rates', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ country, postal, weight_kg: weight })
+      });
+      const out = await res.json().catch(()=>null);
+      q('#rates').innerHTML = renderRates(out);
+    }catch(e){
+      q('#rates').textContent = 'Erreur réseau: '+e.message;
+    }
+  });
+}
+
+// Stripe Checkout (démo)
+const payBtn = q('#checkout');
+if (payBtn){
+  payBtn.addEventListener('click', async ()=>{
+    try{
+      const res = await fetch('/api/create-checkout', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          // TODO: remplace par ton vrai panier
+          items:[{ sku:'TEST', title:'Article test', amount_eur: 12.34, quantity: 1 }]
+        })
+      });
+      const out = await res.json();
+      if(out.url){ location.href = out.url; }
+      else { alert(out.error || 'Paiement indisponible'); }
+    }catch(e){
+      alert('Erreur réseau: '+e.message);
+    }
+  });
+}
 
       // --- Minimal test suite ---
       runTests({data, grid, PRODUCTS});
@@ -405,3 +458,4 @@
   </script>
 </body>
 </html>
+
