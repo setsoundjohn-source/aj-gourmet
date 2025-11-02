@@ -200,7 +200,7 @@
       </div>
     </section>
 
-    <!-- CHECKOUT (API) -->
+<!-- CHECKOUT (API) -->
 <section class="section">
   <div class="container card">
     <h2>Estimation d'expédition</h2>
@@ -357,7 +357,8 @@
         document.querySelectorAll('[data-i18n-'+lang+']').forEach(el=>{ el.textContent = el.getAttribute('data-i18n-'+lang); });
       }
 
-     // Shipping quote via API (Vercel)
+<script>
+// Shipping quote via API (Vercel)
 const q = (s)=>document.querySelector(s);
 
 // Format jolis tarifs
@@ -407,13 +408,14 @@ if (payBtn){
         })
       });
       const out = await res.json();
-      if(out.url){ location.href = out.url; }
-      else { alert(out.error || 'Paiement indisponible'); }
+      if (out.url) location.href = out.url;
+      else alert(out.error || 'Paiement indisponible');
     }catch(e){
       alert('Erreur réseau: '+e.message);
     }
   });
 }
+</script>
 
       // --- Minimal test suite ---
       runTests({data, grid, PRODUCTS});
@@ -458,4 +460,5 @@ if (payBtn){
   </script>
 </body>
 </html>
+
 
