@@ -439,142 +439,134 @@ if (payBtn){
   });
 }
 <script>
-// (laisse tes autres fonctions si tu en as plus haut)
+/* BOOT CHECK */
+console.log('BOOT OK');
 
-// --- MINI CART + RATES + CHECKOUT + STATUS (tout regroupé) ---
-// >>> recolle ici tout le JS que nous avons ajouté précédemment (mini-panier, /api/rates, /api/create-checkout, status banner)
-// EXEMPLE : si tu n’as plus rien d’autre, colle simplement le bloc que je t’ai donné la dernière fois
+/* Utilitaires */
+const $ = (s)=>document.querySelector(s);
 
-// Shipping quote via API (Vercel)
-const q = (s)=>document.querySelector(s);
+/* ----------- RENDU TARIFS (API Vercel) ----------- */
 function renderRates(data){
   if(!data) return 'Aucune réponse.';
   if(data.error) return `Erreur: ${data.error}`;
   const mode = data.mode || 'demo';
   const rates = Array.isArray(data.rates) ? data.rates : [];
   if(!rates.length) return `Aucun tarif retourné (${mode}).`;
-  return `<strong>Tarifs (${mode}) :</strong> ` + 
+  return `<strong>Tarifs (${mode}) :</strong> ` +
     rates.map(r=>`${r.carrier} ${r.service||''} ${r.days? r.days+'j ' : ''}— <b>${Number(r.price_eur).toFixed(2)}€</b>`).join(' · ');
 }
-const quoteBtn = q('#quote');
-if (quoteBtn){
-  quoteBtn.addEventListener('click', async ()=>{
-    const country = (q('#country')?.value || 'FR').trim().toUpperCase();
-    const postal  = (q('#postal')?.value  || '75008').trim();
-    const weight  = Math.max(0.1, parseFloat(q('#weight')?.value || '1.2'));
-    q('#rates').textContent = 'Calcul en cours…';
-    try{
-      const res = await fetch('/api/rates', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ country, postal, weight_kg: weight })
-      });
-      const out = await res.json().catch(()=>null);
-      q('#rates').innerHTML = renderRates(out);
-    }catch(e){
-      q('#rates').textContent = 'Erreur réseau: '+e.message;
+
+/* ----------- ÉCOUTEURS UI (une fois DOM prêt) ----------- */
+document.addEventListener('DOMContentLoaded', () => {
+  /* Bouton tarifs */
+  const quoteBtn = $('#quote');
+  if (quoteBtn){
+    quoteBtn.addEventListener('click', async ()=>{
+      const country = ($('#country')?.value || 'FR').trim().toUpperCase();
+      const postal  = ($('#postal')?.value  || '75008').trim();
+      const weight  = Math.max(0.1, parseFloat($('#weight')?.value || '1.2'));
+      const ratesBox = $('#rates');
+      if (ratesBox) ratesBox.textContent = 'Calcul en cours…';
+      try{
+        const res = await fetch('/api/rates', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ country, postal, weight_kg: weight })
+        });
+        const out = await res.json().catch(()=>null);
+        if (ratesBox) ratesBox.innerHTML = renderRates(out);
+      }catch(e){
+        if (ratesBox) ratesBox.textContent = 'Erreur réseau: '+e.message;
+      }
+    });
+  }
+
+  /* Mini-panier */
+  const CART_KEY = 'ajg_cart_v1';
+  const getCart = ()=> JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+  const saveCart = (items)=> localStorage.setItem(CART_KEY, JSON.stringify(items));
+  const money = n => Number(n).toFixed(2).replace('.', ',');
+
+  function renderCart(){
+    const box = $('#cart-box');
+    const items = getCart();
+    if (!box) return;
+    if (!items.length){ box.innerHTML = 'Panier vide.'; return; }
+    const total = items.reduce((s,i)=> s + i.amount_eur * i.quantity, 0);
+    box.innerHTML = `
+      <table style="width:100%">
+        <thead><tr><th style="text-align:left">Produit</th><th>Qté</th><th>Prix</th><th></th></tr></thead>
+        <tbody>
+          ${items.map((i,idx)=>`
+            <tr>
+              <td>${i.title}</td>
+              <td>
+                <button data-qty="${idx}" data-delta="-1">-</button>
+                <span style="display:inline-block;width:24px;text-align:center">${i.quantity}</span>
+                <button data-qty="${idx}" data-delta="1">+</button>
+              </td>
+              <td>${money(i.amount_eur)}€</td>
+              <td><button data-del="${idx}">x</button></td>
+            </tr>`).join('')}
+        </tbody>
+        <tfoot><tr><td colspan="2"></td><td><b>Total</b></td><td><b>${money(total)}€</b></td></tr></tfoot>
+      </table>`;
+  }
+
+  document.addEventListener('click', (e)=>{
+    const add = e.target.closest?.('[data-add]');
+    if (add){
+      const item = JSON.parse(add.getAttribute('data-add'));
+      const cart = getCart();
+      const found = cart.find(x=> x.sku===item.sku);
+      if (found) found.quantity += 1;
+      else cart.push({...item, quantity:1});
+      saveCart(cart); renderCart();
+    }
+    const delIdx = e.target.getAttribute?.('data-del');
+    if (delIdx!==null && delIdx!==undefined){
+      const cart = getCart(); cart.splice(Number(delIdx),1); saveCart(cart); renderCart();
+    }
+    const qtyIdx = e.target.getAttribute?.('data-qty');
+    if (qtyIdx!==null && qtyIdx!==undefined){
+      const delta = Number(e.target.getAttribute('data-delta')||1);
+      const cart = getCart(); cart[qtyIdx].quantity = Math.max(1, (cart[qtyIdx].quantity||1)+delta);
+      saveCart(cart); renderCart();
     }
   });
-}
-// Stripe Checkout (démo)
-const payBtn = q('#checkout');
-if (payBtn){
-  payBtn.addEventListener('click', async ()=>{
-    try{
-      const res = await fetch('/api/create-checkout', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          // TODO: remplace par ton vrai panier
-          items:[{ sku:'TEST', title:'Article test', amount_eur: 12.34, quantity: 1 }]
-        })
-      });
-      const out = await res.json();
-      if (out.url) location.href = out.url;
-      else alert(out.error || 'Paiement indisponible');
-    }catch(e){
-      alert('Erreur réseau: '+e.message);
-    }
+
+  $('#cart-clear')?.addEventListener('click', ()=>{ saveCart([]); renderCart(); });
+
+  $('#cart-checkout')?.addEventListener('click', async ()=>{
+    const items = getCart();
+    if (!items.length) return alert('Panier vide.');
+    const r = await fetch('/api/create-checkout', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ items })
+    });
+    const out = await r.json();
+    if (out.url) location = out.url; else alert(out.error || 'Paiement indisponible');
   });
-}
-// --- MINI CART ---
-const CART_KEY = 'ajg_cart_v1';
-const getCart = ()=> JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-const saveCart = (items)=> localStorage.setItem(CART_KEY, JSON.stringify(items));
-const money = n => Number(n).toFixed(2).replace('.', ',');
-function renderCart(){
-  const box = document.querySelector('#cart-box');
-  const items = getCart();
-  if (!box) return;
-  if (!items.length){ box.innerHTML = 'Panier vide.'; return; }
-  const total = items.reduce((s,i)=> s + i.amount_eur * i.quantity, 0);
-  box.innerHTML = `
-    <table style="width:100%">
-      <thead><tr><th style="text-align:left">Produit</th><th>Qté</th><th>Prix</th><th></th></tr></thead>
-      <tbody>
-        ${items.map((i,idx)=>`
-          <tr>
-            <td>${i.title}</td>
-            <td>
-              <button data-qty="${idx}" data-delta="-1">-</button>
-              <span style="display:inline-block;width:24px;text-align:center">${i.quantity}</span>
-              <button data-qty="${idx}" data-delta="1">+</button>
-            </td>
-            <td>${money(i.amount_eur)}€</td>
-            <td><button data-del="${idx}">x</button></td>
-          </tr>`).join('')}
-      </tbody>
-      <tfoot><tr><td colspan="2"></td><td><b>Total</b></td><td><b>${money(total)}€</b></td></tr></tfoot>
-    </table>`;
-}
-document.addEventListener('click', (e)=>{
-  const add = e.target.closest('[data-add]');
-  if (add){
-    const item = JSON.parse(add.getAttribute('data-add'));
-    const cart = getCart();
-    const found = cart.find(x=> x.sku===item.sku);
-    if (found) found.quantity += 1;
-    else cart.push({...item, quantity:1});
-    saveCart(cart); renderCart();
-  }
-  const delIdx = e.target.getAttribute('data-del');
-  if (delIdx!==null){
-    const cart = getCart(); cart.splice(Number(delIdx),1); saveCart(cart); renderCart();
-  }
-  const qtyIdx = e.target.getAttribute('data-qty');
-  if (qtyIdx!==null){
-    const delta = Number(e.target.getAttribute('data-delta')||1);
-    const cart = getCart(); cart[qtyIdx].quantity = Math.max(1, (cart[qtyIdx].quantity||1)+delta);
-    saveCart(cart); renderCart();
-  }
-});
-document.querySelector('#cart-clear')?.addEventListener('click', ()=>{ saveCart([]); renderCart(); });
-document.querySelector('#cart-checkout')?.addEventListener('click', async ()=>{
-  const items = getCart();
-  if (!items.length) return alert('Panier vide.');
-  const r = await fetch('/api/create-checkout', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ items })
-  });
-  const out = await r.json();
-  if (out.url) location = out.url; else alert(out.error || 'Paiement indisponible');
-});
-// init render
-renderCart();
-// --- STATUS BANNER ---
-(function(){
+
+  // Init panier au chargement
+  renderCart();
+
+  /* Bandeau succès / annulation */
   const p = new URLSearchParams(location.search);
   const s = p.get('status');
-  if (!s) return;
-  const box = document.createElement('div');
-  box.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:16px;padding:10px 14px;border-radius:8px;background:#1f3b2f;color:#d9ffea;z-index:9999';
-  box.textContent = s==='success' ? '✅ Paiement réussi. Merci !' : '❌ Paiement annulé.';
-  document.body.appendChild(box);
-  setTimeout(()=> box.remove(), 6000);
-})();
+  if (s){
+    const box = document.createElement('div');
+    box.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:16px;padding:10px 14px;border-radius:8px;background:#1f3b2f;color:#d9ffea;z-index:9999';
+    box.textContent = s==='success' ? '✅ Paiement réussi. Merci !' : '❌ Paiement annulé.';
+    document.body.appendChild(box);
+    setTimeout(()=> box.remove(), 6000);
+  }
+});
 </script>
 </body>
 </html>
+
+
 
 
 
