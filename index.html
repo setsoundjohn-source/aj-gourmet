@@ -438,53 +438,70 @@ if (payBtn){
     }
   });
 }
-</script>
-      // --- Minimal test suite ---
-      runTests({data, grid, PRODUCTS});
-    }
+<script>
+// (laisse tes autres fonctions si tu en as plus haut)
 
-    function runTests(ctx){
-      const results = [];
-      const {data, grid, PRODUCTS} = ctx;
-      // T1: site-data present
-      results.push({name:'T1: #site-data présent', pass: !!document.getElementById('site-data')});
-      // T2: JSON parse OK & catalog array
-      results.push({name:'T2: JSON valide & catalog[]', pass: !!(data && Array.isArray(data.catalog) && data.catalog.length>0)});
-      // T3: grid exists
-      results.push({name:'T3: #grid existe', pass: !!grid});
-      // T4: products rendered count > 0
-      const rendered = grid ? grid.children.length : 0;
-      results.push({name:'T4: Produits rendus (>0)', pass: rendered>0, info:`count=${rendered}`});
-      // T5: sample product by SKU exists
-      const hasBdx = Array.from(grid.querySelectorAll('.product .pbody')).some(el=>/Bordeaux AOC Rouge/.test(el.textContent));
-      results.push({name:'T5: Présence Bordeaux AOC Rouge', pass: hasBdx});
-      // T6: age-gate button exists for alcohol products
-      const ageButtons = grid.querySelectorAll('.product [data-age]').length;
-      results.push({name:'T6: Bouton 18+ pour alcool', pass: ageButtons>0, info:`found=${ageButtons}`});
+// --- MINI CART + RATES + CHECKOUT + STATUS (tout regroupé) ---
+// >>> recolle ici tout le JS que nous avons ajouté précédemment (mini-panier, /api/rates, /api/create-checkout, status banner)
+// EXEMPLE : si tu n’as plus rien d’autre, colle simplement le bloc que je t’ai donné la dernière fois
 
-      // Render tests panel
-      const panel = document.createElement('details');
-      panel.open = false;
-      panel.style.cssText = 'max-width:1200px;margin:20px auto;padding:12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03)';
-      const sum = results.filter(r=>r.pass).length + '/' + results.length;
-      panel.innerHTML = `<summary><b>Tests intégrés</b> — ${sum} OK</summary>` +
-        '<ul style="margin:10px 0 0 20px">' + results.map(r=>`<li>${r.pass? '✅' : '❌'} ${r.name}${r.info? ' — <span class="muted">'+r.info+'</span>' : ''}</li>`).join('') + '</ul>';
-      document.body.appendChild(panel);
-      console.table(results);
+// Shipping quote via API (Vercel)
+const q = (s)=>document.querySelector(s);
+function renderRates(data){
+  if(!data) return 'Aucune réponse.';
+  if(data.error) return `Erreur: ${data.error}`;
+  const mode = data.mode || 'demo';
+  const rates = Array.isArray(data.rates) ? data.rates : [];
+  if(!rates.length) return `Aucun tarif retourné (${mode}).`;
+  return `<strong>Tarifs (${mode}) :</strong> ` + 
+    rates.map(r=>`${r.carrier} ${r.service||''} ${r.days? r.days+'j ' : ''}— <b>${Number(r.price_eur).toFixed(2)}€</b>`).join(' · ');
+}
+const quoteBtn = q('#quote');
+if (quoteBtn){
+  quoteBtn.addEventListener('click', async ()=>{
+    const country = (q('#country')?.value || 'FR').trim().toUpperCase();
+    const postal  = (q('#postal')?.value  || '75008').trim();
+    const weight  = Math.max(0.1, parseFloat(q('#weight')?.value || '1.2'));
+    q('#rates').textContent = 'Calcul en cours…';
+    try{
+      const res = await fetch('/api/rates', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ country, postal, weight_kg: weight })
+      });
+      const out = await res.json().catch(()=>null);
+      q('#rates').innerHTML = renderRates(out);
+    }catch(e){
+      q('#rates').textContent = 'Erreur réseau: '+e.message;
     }
-
-    if(document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', render);
-    } else {
-      render();
+  });
+}
+// Stripe Checkout (démo)
+const payBtn = q('#checkout');
+if (payBtn){
+  payBtn.addEventListener('click', async ()=>{
+    try{
+      const res = await fetch('/api/create-checkout', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          // TODO: remplace par ton vrai panier
+          items:[{ sku:'TEST', title:'Article test', amount_eur: 12.34, quantity: 1 }]
+        })
+      });
+      const out = await res.json();
+      if (out.url) location.href = out.url;
+      else alert(out.error || 'Paiement indisponible');
+    }catch(e){
+      alert('Erreur réseau: '+e.message);
     }
-  })();
-  // --- MINI CART ---
+  });
+}
+// --- MINI CART ---
 const CART_KEY = 'ajg_cart_v1';
 const getCart = ()=> JSON.parse(localStorage.getItem(CART_KEY) || '[]');
 const saveCart = (items)=> localStorage.setItem(CART_KEY, JSON.stringify(items));
 const money = n => Number(n).toFixed(2).replace('.', ',');
-
 function renderCart(){
   const box = document.querySelector('#cart-box');
   const items = getCart();
@@ -510,7 +527,6 @@ function renderCart(){
       <tfoot><tr><td colspan="2"></td><td><b>Total</b></td><td><b>${money(total)}€</b></td></tr></tfoot>
     </table>`;
 }
-
 document.addEventListener('click', (e)=>{
   const add = e.target.closest('[data-add]');
   if (add){
@@ -532,9 +548,7 @@ document.addEventListener('click', (e)=>{
     saveCart(cart); renderCart();
   }
 });
-
 document.querySelector('#cart-clear')?.addEventListener('click', ()=>{ saveCart([]); renderCart(); });
-
 document.querySelector('#cart-checkout')?.addEventListener('click', async ()=>{
   const items = getCart();
   if (!items.length) return alert('Panier vide.');
@@ -545,10 +559,9 @@ document.querySelector('#cart-checkout')?.addEventListener('click', async ()=>{
   const out = await r.json();
   if (out.url) location = out.url; else alert(out.error || 'Paiement indisponible');
 });
-
 // init render
 renderCart();
-  // --- STATUS BANNER ---
+// --- STATUS BANNER ---
 (function(){
   const p = new URLSearchParams(location.search);
   const s = p.get('status');
@@ -559,9 +572,11 @@ renderCart();
   document.body.appendChild(box);
   setTimeout(()=> box.remove(), 6000);
 })();
-  </script>
+</script>
+
 </body>
 </html>
+
 
 
 
