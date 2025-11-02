@@ -232,6 +232,28 @@
     </div>
   </div>
 </section>
+    <!-- CART (mini) -->
+<section id="shop" class="section">
+  <div class="container card">
+    <h2>Panier</h2>
+    <div style="display:flex; gap:12px; flex-wrap:wrap">
+      <!-- exemples de produits -->
+      <button class="btn" data-add='{"sku":"FG125","title":"Foie gras 125g","amount_eur":24.90}'>+ Foie gras 125g — 24,90€</button>
+      <button class="btn" data-add='{"sku":"CVR30","title":"Caviar 30g","amount_eur":59.00}'>+ Caviar 30g — 59,00€</button>
+      <button class="btn" data-add='{"sku":"BOR75","title":"Bordeaux AOC 75cl","amount_eur":14.50}'>+ Bordeaux 75cl — 14,50€</button>
+    </div>
+
+    <div id="cart-box" class="notice" style="margin-top:12px">
+      Panier vide.
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:12px">
+      <button id="cart-clear" class="btn">Vider</button>
+      <button id="cart-checkout" class="btn primary">Payer (Stripe)</button>
+    </div>
+  </div>
+</section>
+
 
   </main>
 
@@ -457,8 +479,79 @@ if (payBtn){
       render();
     }
   })();
+  // --- MINI CART ---
+const CART_KEY = 'ajg_cart_v1';
+const getCart = ()=> JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+const saveCart = (items)=> localStorage.setItem(CART_KEY, JSON.stringify(items));
+const money = n => Number(n).toFixed(2).replace('.', ',');
+
+function renderCart(){
+  const box = document.querySelector('#cart-box');
+  const items = getCart();
+  if (!box) return;
+  if (!items.length){ box.innerHTML = 'Panier vide.'; return; }
+  const total = items.reduce((s,i)=> s + i.amount_eur * i.quantity, 0);
+  box.innerHTML = `
+    <table style="width:100%">
+      <thead><tr><th style="text-align:left">Produit</th><th>Qté</th><th>Prix</th><th></th></tr></thead>
+      <tbody>
+        ${items.map((i,idx)=>`
+          <tr>
+            <td>${i.title}</td>
+            <td>
+              <button data-qty="${idx}" data-delta="-1">-</button>
+              <span style="display:inline-block;width:24px;text-align:center">${i.quantity}</span>
+              <button data-qty="${idx}" data-delta="1">+</button>
+            </td>
+            <td>${money(i.amount_eur)}€</td>
+            <td><button data-del="${idx}">x</button></td>
+          </tr>`).join('')}
+      </tbody>
+      <tfoot><tr><td colspan="2"></td><td><b>Total</b></td><td><b>${money(total)}€</b></td></tr></tfoot>
+    </table>`;
+}
+
+document.addEventListener('click', (e)=>{
+  const add = e.target.closest('[data-add]');
+  if (add){
+    const item = JSON.parse(add.getAttribute('data-add'));
+    const cart = getCart();
+    const found = cart.find(x=> x.sku===item.sku);
+    if (found) found.quantity += 1;
+    else cart.push({...item, quantity:1});
+    saveCart(cart); renderCart();
+  }
+  const delIdx = e.target.getAttribute('data-del');
+  if (delIdx!==null){
+    const cart = getCart(); cart.splice(Number(delIdx),1); saveCart(cart); renderCart();
+  }
+  const qtyIdx = e.target.getAttribute('data-qty');
+  if (qtyIdx!==null){
+    const delta = Number(e.target.getAttribute('data-delta')||1);
+    const cart = getCart(); cart[qtyIdx].quantity = Math.max(1, (cart[qtyIdx].quantity||1)+delta);
+    saveCart(cart); renderCart();
+  }
+});
+
+document.querySelector('#cart-clear')?.addEventListener('click', ()=>{ saveCart([]); renderCart(); });
+
+document.querySelector('#cart-checkout')?.addEventListener('click', async ()=>{
+  const items = getCart();
+  if (!items.length) return alert('Panier vide.');
+  const r = await fetch('/api/create-checkout', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ items })
+  });
+  const out = await r.json();
+  if (out.url) location = out.url; else alert(out.error || 'Paiement indisponible');
+});
+
+// init render
+renderCart();
+
   </script>
 </body>
 </html>
+
 
 
