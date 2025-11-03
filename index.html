@@ -292,6 +292,32 @@
     </div>
   </div>
 
+  <!-- DOIT ÊTRE AVANT le script principal -->
+<script id="site-data" type="application/json">
+{
+  "brand": { "name": "Alain Janoleviah Gourmet" },
+  "catalog": [
+    { "category": "Charcuterie",
+      "products": [
+        { "sku":"SAL-NAT-250","title":"Saucisson sec 250 g","price_eur":8.9,
+          "images":["https://images.unsplash.com/photo-1604908554049-9be5f3a850e3?q=80&w=1200&auto=format&fit=crop"],
+          "shipping_flags":[] },
+        { "sku":"SAL-TRUF-250","title":"Saucisson à la truffe 250 g","price_eur":14.9,
+          "images":["https://images.unsplash.com/photo-1625944621729-6d9b570b2ed1?q=80&w=1200&auto=format&fit=crop"],
+          "shipping_flags":[] }
+      ]
+    },
+    { "category": "Vins & spiritueux",
+      "products": [
+        { "sku":"VIN-BDX-R-075","title":"Bordeaux AOC Rouge 0,75 L","price_eur":19.0,
+          "images":["https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?q=80&w=1200&auto=format&fit=crop"],
+          "shipping_flags":["alcohol"], "age_gate": true }
+      ]
+    }
+  ]
+}
+</script>
+
   <!-- ✅ MAIN SCRIPT: un seul bloc -->
 <script>
 (function(){
@@ -467,6 +493,7 @@
 </script>
 </body>
 </html>
+
 
 
 
