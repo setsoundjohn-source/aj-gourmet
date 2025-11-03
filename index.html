@@ -292,159 +292,13 @@
     </div>
   </div>
 
-  <!-- ✅ MAIN SCRIPT: runs after DOM is ready and after site-data is present -->
-  <script>
-  (function(){
-    function safeParseSiteData(){
-      const el = document.getElementById('site-data');
-      if(!el){
-        console.error('[AJG] site-data introuvable.');
-        return null;
-      }
-      try {
-        return JSON.parse(el.textContent || '{}');
-      } catch(e){
-        console.error('[AJG] JSON invalide dans site-data:', e);
-        return null;
-      }
-    }
-
-    function render(){
-      const data = safeParseSiteData();
-      const grid = document.getElementById('grid');
-      if(!grid){
-        console.warn('[AJG] Grille #grid introuvable.');
-        return;
-      }
-
-      // Placeholder visuel si une image manque
-      const PLACEHOLDER = 'https://images.unsplash.com/photo-1514860932651-0149f3f39a14?q=80&w=1200&auto=format&fit=crop';
-
-      if(!data || !Array.isArray(data.catalog)){
-        grid.innerHTML = '<div class="card">Aucune donnée catalogue disponible. Veuillez vérifier la balise <code>site-data</code>.</div>';
-        return;
-      }
-
-      // Aplatir le catalogue en produits simples pour la grille
-      const PRODUCTS = [];
-      for(const cat of data.catalog){
-        const catName = cat.category || 'Divers';
-        const list = Array.isArray(cat.products) ? cat.products : [];
-        for(const p of list){
-          PRODUCTS.push({
-            sku: p.sku,
-            title: p.title,
-            cat: catName,
-            price: p.price_eur || p.price || 0,
-            flags: (p.shipping_flags||[]).concat(p.age_gate?['alcohol']:[]),
-            img: (p.images && p.images[0]) || PLACEHOLDER
-          });
-        }
-      }
-
-      grid.innerHTML = '';
-      for(const p of PRODUCTS){
-        const el = document.createElement('article');
-        el.className = 'product';
-        el.innerHTML = `
-          <img src="${p.img}" alt="${p.title}"/>
-          <div class="pbody">
-            <div class="muted">${p.cat}</div>
-            <div style="font-weight:700">${p.title}</div>
-            <div class="price">${(Number(p.price)||0).toFixed(2)} €</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">${p.flags.map(f=>`<span class="pill muted" style="border:1px solid var(--line)">${f}</span>`).join('')}</div>
-            <div style="display:flex;gap:10px;margin-top:6px">
-              <button class="btn" data-add="${p.sku}">Ajouter</button>
-              ${p.flags.includes('alcohol')? '<button class="btn" data-age>18+</button>':''}
-            </div>
-          </div>`;
-        grid.appendChild(el);
-      }
-
-      // Bind actions
-      grid.addEventListener('click', (e)=>{
-        const btn = e.target.closest('[data-add]');
-        if(btn){
-          alert('Ajouté au panier: '+btn.getAttribute('data-add'));
-        }
-        if(e.target.closest('[data-age]')){
-          document.getElementById('ageGate').classList.add('active');
-        }
-      });
-
-      // Language switch (FR/EN)
-      document.querySelectorAll('[data-lang]').forEach(btn=>{
-        btn.addEventListener('click', ()=> switchLang(btn.getAttribute('data-lang')))
-      });
-      function switchLang(lang){
-        document.querySelectorAll('[data-i18n-'+lang+']').forEach(el=>{ el.textContent = el.getAttribute('data-i18n-'+lang); });
-      }
-
-<script>
-// Shipping quote via API (Vercel)
-const q = (s)=>document.querySelector(s);
-
-// Format jolis tarifs
-function renderRates(data){
-  if(!data) return 'Aucune réponse.';
-  if(data.error) return `Erreur: ${data.error}`;
-  const mode = data.mode || 'demo';
-  const rates = Array.isArray(data.rates) ? data.rates : [];
-  if(!rates.length) return `Aucun tarif retourné (${mode}).`;
-  return `<strong>Tarifs (${mode}) :</strong> ` + 
-    rates.map(r=>`${r.carrier} ${r.service||''} ${r.days? r.days+'j ' : ''}— <b>${Number(r.price_eur).toFixed(2)}€</b>`).join(' · ');
-}
-
-const quoteBtn = q('#quote');
-if (quoteBtn){
-  quoteBtn.addEventListener('click', async ()=>{
-    const country = (q('#country')?.value || 'FR').trim().toUpperCase();
-    const postal  = (q('#postal')?.value  || '75008').trim();
-    const weight  = Math.max(0.1, parseFloat(q('#weight')?.value || '1.2'));
-
-    q('#rates').textContent = 'Calcul en cours…';
-    try{
-      const res = await fetch('/api/rates', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ country, postal, weight_kg: weight })
-      });
-      const out = await res.json().catch(()=>null);
-      q('#rates').innerHTML = renderRates(out);
-    }catch(e){
-      q('#rates').textContent = 'Erreur réseau: '+e.message;
-    }
-  });
-}
-
-// Stripe Checkout (démo)
-const payBtn = q('#checkout');
-if (payBtn){
-  payBtn.addEventListener('click', async ()=>{
-    try{
-      const res = await fetch('/api/create-checkout', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          // TODO: remplace par ton vrai panier
-          items:[{ sku:'TEST', title:'Article test', amount_eur: 12.34, quantity: 1 }]
-        })
-      });
-      const out = await res.json();
-      if (out.url) location.href = out.url;
-      else alert(out.error || 'Paiement indisponible');
-    }catch(e){
-      alert('Erreur réseau: '+e.message);
-    }
-  });
-}
-<!-- ✅ MAIN SCRIPT: runs after DOM & site-data -->
+  <!-- ✅ MAIN SCRIPT: un seul bloc -->
 <script>
 (function(){
   const $  = (s)=>document.querySelector(s);
   const $$ = (s)=>Array.from(document.querySelectorAll(s));
 
-  /* -------- Lecture des données -------- */
+  /* ---- Lecture des données ---- */
   function readSiteData(){
     const el = document.getElementById('site-data');
     if(!el){ console.error('[AJG] site-data introuvable'); return null; }
@@ -452,15 +306,12 @@ if (payBtn){
     catch(e){ console.error('[AJG] JSON invalide dans site-data', e); return null; }
   }
 
-  /* -------- Utilitaires -------- */
-  const money     = (n)=>Number(n||0).toFixed(2);
-  const moneyEU   = (n)=>money(n).replace('.', ',');
-  const PH        = 'https://images.unsplash.com/photo-1514860932651-0149f3f39a14?q=80&w=1200&auto=format&fit=crop';
-  const CART_KEY  = 'ajg_cart_v1';
-  const getCart   = ()=> JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-  const saveCart  = (items)=> localStorage.setItem(CART_KEY, JSON.stringify(items));
+  /* ---- Utils ---- */
+  const money   = (n)=>Number(n||0).toFixed(2);
+  const moneyEU = (n)=>money(n).replace('.', ',');
+  const PH      = 'https://images.unsplash.com/photo-1514860932651-0149f3f39a14?q=80&w=1200&auto=format&fit=crop';
 
-  /* -------- Rendu du catalogue -------- */
+  /* ---- Catalogue ---- */
   function renderCatalogue(){
     const data = readSiteData();
     const grid = $('#grid');
@@ -469,7 +320,6 @@ if (payBtn){
       grid.innerHTML = '<div class="card">Catalogue indisponible (site-data absent).</div>';
       return;
     }
-    // Aplatir
     const PRODUCTS = [];
     data.catalog.forEach(cat=>{
       (cat.products||[]).forEach(p=>{
@@ -483,7 +333,6 @@ if (payBtn){
         });
       });
     });
-
     grid.innerHTML = '';
     PRODUCTS.forEach(p=>{
       const art = document.createElement('article');
@@ -504,8 +353,6 @@ if (payBtn){
         </div>`;
       grid.appendChild(art);
     });
-
-    // Actions catalogue
     grid.addEventListener('click',(e)=>{
       const add = e.target.closest('[data-add]');
       if(add){
@@ -521,7 +368,11 @@ if (payBtn){
     });
   }
 
-  /* -------- Mini-panier -------- */
+  /* ---- Mini-panier ---- */
+  const CART_KEY = 'ajg_cart_v1';
+  const getCart  = ()=> JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+  const saveCart = (items)=> localStorage.setItem(CART_KEY, JSON.stringify(items));
+
   function renderCart(){
     const box = $('#cart-box'); if(!box) return;
     const items = getCart();
@@ -559,7 +410,6 @@ if (payBtn){
       saveCart(cart); renderCart();
     }
   });
-
   $('#cart-clear')?.addEventListener('click', ()=>{ saveCart([]); renderCart(); });
   $('#cart-checkout')?.addEventListener('click', async ()=>{
     const items = getCart();
@@ -572,7 +422,7 @@ if (payBtn){
     if(out.url) location = out.url; else alert(out.error || 'Paiement indisponible');
   });
 
-  /* -------- Devis transport (API /api/rates) -------- */
+  /* ---- Devis transport (/api/rates) ---- */
   function formatRates(data){
     if(!data) return 'Aucune réponse.';
     if(data.error) return 'Erreur: '+data.error;
@@ -582,7 +432,6 @@ if (payBtn){
     return `<strong>Tarifs (${mode}) :</strong> ` +
       rates.map(r=>`${r.carrier} ${r.service||''} ${r.days? r.days+'j ' : ''}— <b>${Number(r.price_eur).toFixed(2)}€</b>`).join(' · ');
   }
-
   $('#quote')?.addEventListener('click', async ()=>{
     const country = ($('#country')?.value || 'FR').trim().toUpperCase();
     const postal  = ($('#postal')?.value  || '75008').trim();
@@ -601,7 +450,7 @@ if (payBtn){
     }
   });
 
-  /* -------- Bandeau succès / annulation -------- */
+  /* ---- Bandeau succès / annulation ---- */
   (function(){
     const s = new URLSearchParams(location.search).get('status');
     if(!s) return;
@@ -611,13 +460,14 @@ if (payBtn){
     document.body.appendChild(box); setTimeout(()=>box.remove(), 6000);
   })();
 
-  /* -------- Boot -------- */
+  /* ---- Boot ---- */
   renderCatalogue();
   renderCart();
 })();
 </script>
 </body>
 </html>
+
 
 
 
