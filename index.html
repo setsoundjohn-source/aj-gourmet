@@ -433,22 +433,117 @@
         });
       });
     }
+    /* ---- Panier persistant (localStorage) ---- */
+    const CART_KEY = 'ajg_cart_v1';
+    const money = n => Number(n).toFixed(2).replace('.', ',');
+
+    const getCart = () => {
+      try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+      catch { return []; }
+    };
+    const saveCart = (items) => localStorage.setItem(CART_KEY, JSON.stringify(items));
+
+    function renderCart(){
+      const box = document.querySelector('#cart-box');
+      if (!box) return;
+      const items = getCart();
+      if (!items.length){ box.innerHTML = 'Panier vide.'; return; }
+      const total = items.reduce((s,i)=> s + (Number(i.amount_eur)||0) * (i.quantity||1), 0);
+      box.innerHTML = `
+        <table style="width:100%">
+          <thead>
+            <tr><th style="text-align:left">Produit</th><th>Qté</th><th>Prix</th><th></th></tr>
+          </thead>
+          <tbody>
+            ${items.map((i,idx)=>`
+              <tr>
+                <td>${i.title}</td>
+                <td>
+                  <button class="btn" data-qty="${idx}" data-delta="-1">-</button>
+                  <span style="display:inline-block;width:24px;text-align:center">${i.quantity||1}</span>
+                  <button class="btn" data-qty="${idx}" data-delta="1">+</button>
+                </td>
+                <td>${money(i.amount_eur)}€</td>
+                <td><button class="btn" data-del="${idx}">x</button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+          <tfoot>
+            <tr><td colspan="2"></td><td><b>Total</b></td><td><b>${money(total)}€</b></td></tr>
+          </tfoot>
+        </table>`;
+    }
+
+    // Écouteurs globaux pour les actions panier
+    document.addEventListener('click', (e)=>{
+      // Ajouter (depuis les boutons de démo ET depuis les cartes produits si tu passes en data-add JSON)
+      const addBtn = e.target.closest?.('[data-add]');
+      if (addBtn){
+        let item;
+        const val = addBtn.getAttribute('data-add');
+        try {
+          // si data-add contient un JSON (cas des boutons de démo)
+          item = JSON.parse(val);
+        } catch {
+          // sinon on construit un item minimal (cas cartes produits actuelles)
+          item = { sku: val, title: val, amount_eur: 9.99 };
+        }
+        const cart = getCart();
+        const found = cart.find(x=> x.sku===item.sku);
+        if (found) found.quantity = (found.quantity||1)+1;
+        else cart.push({ ...item, quantity: 1 });
+        saveCart(cart);
+        renderCart();
+      }
+
+      // Supprimer une ligne
+      const delIdx = e.target.getAttribute?.('data-del');
+      if (delIdx !== null && delIdx !== undefined){
+        const cart = getCart();
+        cart.splice(Number(delIdx),1);
+        saveCart(cart);
+        renderCart();
+      }
+
+      // Changer quantité
+      const qtyIdx = e.target.getAttribute?.('data-qty');
+      if (qtyIdx !== null && qtyIdx !== undefined){
+        const delta = Number(e.target.getAttribute('data-delta')||1);
+        const cart = getCart();
+        const q = Math.max(1, (cart[qtyIdx].quantity||1) + delta);
+        cart[qtyIdx].quantity = q;
+        saveCart(cart);
+        renderCart();
+      }
+    });
+
+    // Boutons dédiés du bloc Panier
+    document.getElementById('cart-clear')?.addEventListener('click', ()=>{
+      saveCart([]); renderCart();
+    });
+
+    document.getElementById('cart-checkout')?.addEventListener('click', async ()=>{
+      const items = getCart();
+      if (!items.length) return alert('Panier vide.');
+      try{
+        const r = await fetch('/api/create-checkout', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ items })
+        });
+        const out = await r.json();
+        if (out.url) location.href = out.url;
+        else alert(out.error || 'Paiement indisponible');
+      }catch(e){ alert('Erreur réseau: '+e.message); }
+    });
+
+    /* ---- Boot ---- */
+    document.addEventListener('DOMContentLoaded', ()=>{
+      renderCatalogue();
+      wireApi();
+      smoothAnchors();
+    });
+  })();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
