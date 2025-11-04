@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <!-- ✅ MOVE SITE DATA EARLY: ensures it's available before any parsing -->
+  <!-- ✅ DATA: un seul bloc, dans le <head> -->
   <script id="site-data" type="application/json">{
     "brand":{"name":"Alain Janoleviah Gourmet","domain":"alainjanoleviahgourmet.com","logo":{"primary_svg":"assets/logo_A_dark.svg","primary_png":"assets/logo_A_header_dark.png","emblem_svg":"assets/logo_C_emblem_dark.svg","favicons":{"512":"assets/logo_C_emblem_dark_512.png","180":"assets/logo_C_emblem_dark_180.png","32":"assets/logo_C_emblem_dark_32.png"}},"tagline":"","colors":{"primary":"#0B0B0F","secondary":"#F5F5F7","accent":"#CBA135","accent_alt":"#701A1A","background":"#0B0B0F","text":"#F5F5F7"},"typography":{"heading":"Playfair Display","body":"Inter"},"tone":"premium"},
     "catalog":[
@@ -192,70 +192,69 @@
       </div>
     </section>
 
-    <!-- CATALOG GRID (EXCERPT) -->
+    <!-- CATALOG GRID -->
     <section class="section" id="catalogue">
       <div class="container">
         <h2>Catalogue</h2>
+        <!-- Barre de filtres auto -->
+        <div id="filters" class="cta" style="gap:8px; margin-bottom:12px"></div>
         <div class="grid" id="grid"></div>
       </div>
     </section>
 
-<!-- CHECKOUT (API) -->
-<section class="section">
-  <div class="container card">
-    <h2>Estimation d'expédition</h2>
-    <div class="grid3" style="grid-template-columns:1.2fr 1fr 1fr 1fr">
-      <div>
-        <label>Destination (pays)</label>
-        <input id="country" class="btn" style="width:100%" placeholder="Ex: FR, US, BR" />
-      </div>
-      <div>
-        <label>Code postal</label>
-        <input id="postal" class="btn" style="width:100%" placeholder="Ex: 75008" />
-      </div>
-      <div>
-        <label>Poids (kg)</label>
-        <input id="weight" class="btn" type="number" step="0.1" value="1.2" style="width:100%" />
-      </div>
-      <div style="display:flex;align-items:flex-end">
-        <button id="quote" class="btn primary" style="width:100%">Obtenir les tarifs</button>
-      </div>
-    </div>
+    <!-- CHECKOUT (API) -->
+    <section class="section">
+      <div class="container card">
+        <h2>Estimation d'expédition</h2>
+        <div class="grid3" style="grid-template-columns:1.2fr 1fr 1fr 1fr">
+          <div>
+            <label>Destination (pays)</label>
+            <input id="country" class="btn" style="width:100%" placeholder="Ex: FR, US, BR" />
+          </div>
+          <div>
+            <label>Code postal</label>
+            <input id="postal" class="btn" style="width:100%" placeholder="Ex: 75008" />
+          </div>
+          <div>
+            <label>Poids (kg)</label>
+            <input id="weight" class="btn" type="number" step="0.1" value="1.2" style="width:100%" />
+          </div>
+          <div style="display:flex;align-items:flex-end">
+            <button id="quote" class="btn primary" style="width:100%">Obtenir les tarifs</button>
+          </div>
+        </div>
 
-    <div id="rates" style="margin-top:12px" class="notice">
-      Saisissez une destination pour obtenir des tarifs multi-transporteurs (via API).
-    </div>
+        <div id="rates" style="margin-top:12px" class="notice">
+          Saisissez une destination pour obtenir des tarifs multi-transporteurs (via API).
+        </div>
 
-    <div style="display:flex;gap:10px;margin-top:16px">
-      <button id="checkout" class="btn">Payer (démo Stripe)</button>
-      <span class="notice">Le paiement de test ouvre une page Stripe (clés de test).</span>
-    </div>
-  </div>
-</section>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button id="checkout" class="btn">Payer (démo Stripe)</button>
+          <span class="notice">Le paiement de test ouvre une page Stripe (clés de test).</span>
+        </div>
+      </div>
+    </section>
     
     <!-- CART (mini) -->
-<section id="shop" class="section">
-  <div class="container card">
-    <h2>Panier</h2>
-    <div style="display:flex; gap:12px; flex-wrap:wrap">
-      <!-- exemples de produits -->
-      <button class="btn" data-add='{"sku":"FG125","title":"Foie gras 125g","amount_eur":24.90}'>+ Foie gras 125g — 24,90€</button>
-      <button class="btn" data-add='{"sku":"CVR30","title":"Caviar 30g","amount_eur":59.00}'>+ Caviar 30g — 59,00€</button>
-      <button class="btn" data-add='{"sku":"BOR75","title":"Bordeaux AOC 75cl","amount_eur":14.50}'>+ Bordeaux 75cl — 14,50€</button>
-    </div>
+    <section id="shop" class="section">
+      <div class="container card">
+        <h2>Panier</h2>
+        <div style="display:flex; gap:12px; flex-wrap:wrap">
+          <button class="btn" data-add='{"sku":"FG125","title":"Foie gras 125g","amount_eur":24.90}'>+ Foie gras 125g — 24,90€</button>
+          <button class="btn" data-add='{"sku":"CVR30","title":"Caviar 30g","amount_eur":59.00}'>+ Caviar 30g — 59,00€</button>
+          <button class="btn" data-add='{"sku":"BOR75","title":"Bordeaux AOC 75cl","amount_eur":14.50}'>+ Bordeaux 75cl — 14,50€</button>
+        </div>
 
-    <div id="cart-box" class="notice" style="margin-top:12px">
-      Panier vide.
-    </div>
+        <div id="cart-box" class="notice" style="margin-top:12px">
+          Panier vide.
+        </div>
 
-    <div style="display:flex; gap:10px; margin-top:12px">
-      <button id="cart-clear" class="btn">Vider</button>
-      <button id="cart-checkout" class="btn primary">Payer (Stripe)</button>
-    </div>
-  </div>
-</section>
-
-
+        <div style="display:flex; gap:10px; margin-top:12px">
+          <button id="cart-clear" class="btn">Vider</button>
+          <button id="cart-checkout" class="btn primary">Payer (Stripe)</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer id="contact">
@@ -292,65 +291,159 @@
     </div>
   </div>
 
-  <!-- DOIT ÊTRE AVANT le script principal -->
-<script id="site-data" type="application/json">
-{
-  "brand": { "name": "Alain Janoleviah Gourmet" },
-  "catalog": [
-    { "category": "Charcuterie",
-      "products": [
-        { "sku":"SAL-NAT-250","title":"Saucisson sec 250 g","price_eur":8.9,
-          "images":["https://images.unsplash.com/photo-1604908554049-9be5f3a850e3?q=80&w=1200&auto=format&fit=crop"],
-          "shipping_flags":[] },
-        { "sku":"SAL-TRUF-250","title":"Saucisson à la truffe 250 g","price_eur":14.9,
-          "images":["https://images.unsplash.com/photo-1625944621729-6d9b570b2ed1?q=80&w=1200&auto=format&fit=crop"],
-          "shipping_flags":[] }
-      ]
-    },
-    { "category": "Vins & spiritueux",
-      "products": [
-        { "sku":"VIN-BDX-R-075","title":"Bordeaux AOC Rouge 0,75 L","price_eur":19.0,
-          "images":["https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?q=80&w=1200&auto=format&fit=crop"],
-          "shipping_flags":["alcohol"], "age_gate": true }
-      ]
+  <!-- ✅ SCRIPT PRINCIPAL (unique) -->
+  <script>
+  ;(function(){
+    const $ = s => document.querySelector(s);
+    const PH = 'https://images.unsplash.com/photo-1514860932651-0149f3f39a14?q=80&w=1200&auto=format&fit=crop';
+
+    /* ---- Lecture du JSON ---- */
+    function getData(){
+      const el = document.querySelector('#site-data');
+      if(!el) return null;
+      try{ return JSON.parse(el.textContent || '{}'); }
+      catch(e){ console.error('JSON site-data invalide', e); return null; }
     }
-  ]
-}
-</script>
 
-  <!-- ✅ MAIN SCRIPT: un seul bloc -->
-<script>
-(function(){
-  const $  = (s)=>document.querySelector(s);
-  const $$ = (s)=>Array.from(document.querySelectorAll(s));
+    /* ---- Catalogue + Filtres ---- */
+    function renderCatalogue(){
+      const data = getData();
+      const grid = $('#grid');
+      const filters = $('#filters');
+      if(!data || !Array.isArray(data.catalog) || !grid){
+        if(grid) grid.innerHTML = '<div class="card">Catalogue indisponible.</div>';
+        return;
+      }
 
-  /* ---- Lecture des données ---- */
-  function readSiteData(){
-    const el = document.getElementById('site-data');
-    if(!el){ console.error('[AJG] site-data introuvable'); return null; }
-    try { return JSON.parse(el.textContent || '{}'); }
-    catch(e){ console.error('[AJG] JSON invalide dans site-data', e); return null; }
-  }
+      const PRODUCTS = [];
+      const catsSet = new Set();
 
-  /* ---- Utils ---- */
-  const money   = (n)=>Number(n||0).toFixed(2);
-  const moneyEU = (n)=>money(n).replace('.', ',');
-  const PH      = 'https://images.unsplash.com/photo-1514860932651-0149f3f39a14?q=80&w=1200&auto=format&fit=crop';
+      for(const cat of data.catalog){
+        const catName = cat.category || 'Divers';
+        const list = Array.isArray(cat.products) ? cat.products : [];
+        if(list.length) catsSet.add(catName);
+        for(const p of list){
+          PRODUCTS.push({
+            sku: p.sku,
+            title: p.title,
+            cat: catName,
+            price: p.price_eur || p.price || 0,
+            flags: (p.shipping_flags||[]).concat(p.age_gate?['alcohol']:[]),
+            img: (p.images && p.images[0]) || PH
+          });
+        }
+      }
 
-  /* ---- Catalogue ---- */
-  function renderCatalogue(){
-    const data = readSiteData();
-    const grid = $('#grid');
-    if(!grid) return;
-    if(!data || !Array.isArray(data.catalog)){
-      grid.innerHTML = '<div class="card">Catalogue indisponible (site-data absent).</div>';
-      return;
+      function paint(list){
+        grid.innerHTML = '';
+        for(const p of list){
+          const el = document.createElement('article');
+          el.className = 'product';
+          el.innerHTML = `
+            <img src="${p.img}" alt="${p.title}"/>
+            <div class="pbody">
+              <div class="muted">${p.cat}</div>
+              <div style="font-weight:700">${p.title}</div>
+              <div class="price">${(Number(p.price)||0).toFixed(2)} €</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                ${p.flags.map(f=>`<span class="pill muted" style="border:1px solid var(--line)">${f}</span>`).join('')}
+              </div>
+              <div style="display:flex;gap:10px;margin-top:6px">
+                <button class="btn" data-add="${p.sku}">Ajouter</button>
+                ${p.flags.includes('alcohol')? '<button class="btn" data-age>18+</button>':''}
+              </div>
+            </div>`;
+          grid.appendChild(el);
+        }
+      }
+
+      if (filters){
+        filters.innerHTML = '';
+        const mk = (label,val)=>{ const b=document.createElement('button'); b.className='btn pill'; b.dataset.filter=val; b.textContent=label; return b; };
+        filters.appendChild(mk('Tout',''));
+        [...catsSet].forEach(c=> filters.appendChild(mk(c,c)));
+        filters.addEventListener('click',(e)=>{
+          const btn = e.target.closest('[data-filter]'); if(!btn) return;
+          const v = btn.dataset.filter;
+          paint(v ? PRODUCTS.filter(p=>p.cat===v) : PRODUCTS);
+        });
+      }
+
+      grid.addEventListener('click',(e)=>{
+        const add = e.target.closest('[data-add]');
+        if(add){ alert('Ajouté au panier: '+add.getAttribute('data-add')); }
+        if(e.target.closest('[data-age]')) document.getElementById('ageGate')?.classList.add('active');
+      });
+
+      paint(PRODUCTS);
     }
-    const PRODUCTS = [];
-    data.catalog.forEach(cat=>{
-      (cat.products||[]).forEach(p=>{
-        PRODUCTS.push({
-          sku:   p.sku,
+
+    /* ---- Devis transport + Checkout (démo) ---- */
+    function wireApi(){
+      const q = s => document.querySelector(s);
+      const ratesBox = q('#rates');
+
+      function renderRates(out){
+        if(!out) return 'Aucune réponse.';
+        if(out.error) return `Erreur: ${out.error}`;
+        const mode = out.mode || 'demo';
+        const rates = Array.isArray(out.rates)?out.rates:[];
+        if(!rates.length) return `Aucun tarif retourné (${mode}).`;
+        return `<strong>Tarifs (${mode}) :</strong> ` +
+          rates.map(r=>`${r.carrier} ${r.service||''} ${r.days? r.days+'j ' : ''}— <b>${Number(r.price_eur).toFixed(2)}€</b>`).join(' · ');
+      }
+
+      q('#quote')?.addEventListener('click', async ()=>{
+        const country=(q('#country')?.value||'FR').trim().toUpperCase();
+        const postal =(q('#postal')?.value ||'75008').trim();
+        const weight = Math.max(0.1, parseFloat(q('#weight')?.value||'1.2'));
+        if(ratesBox) ratesBox.textContent='Calcul en cours…';
+        try{
+          const res = await fetch('/api/rates', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ country, postal, weight_kg: weight })
+          });
+          const out = await res.json().catch(()=>null);
+          if(ratesBox) ratesBox.innerHTML = renderRates(out);
+        }catch(e){
+          if(ratesBox) ratesBox.textContent = 'Erreur réseau: '+e.message;
+        }
+      });
+
+      q('#checkout')?.addEventListener('click', async ()=>{
+        try{
+          const r = await fetch('/api/create-checkout', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ items:[{ sku:'TEST', title:'Article test', amount_eur: 12.34, quantity:1 }] })
+          });
+          const out = await r.json();
+          if (out.url) location.href = out.url; else alert(out.error || 'Paiement indisponible');
+        }catch(e){ alert('Erreur réseau: '+e.message); }
+      });
+    }
+
+    /* ---- Ancre douce ---- */
+    function smoothAnchors(){
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        a.addEventListener('click', e=>{
+          const id=a.getAttribute('href'); const t=document.querySelector(id);
+          if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+        });
+      });
+    }
+
+    /* ---- Boot ---- */
+    document.addEventListener('DOMContentLoaded', ()=>{
+      renderCatalogue();
+      wireApi();
+      smoothAnchors();
+    });
+  })();
+  </script>
+</body>
+</html>
           title: p.title,
           cat:   cat.category || 'Divers',
           price: p.price_eur ?? p.price ?? 0,
@@ -493,6 +586,7 @@
 </script>
 </body>
 </html>
+
 
 
 
