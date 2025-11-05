@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact – AJ Gourmet / ALJANDCO</title>
+  <meta name="description" content="Contact AJ Gourmet (ALJANDCO) : adresse, téléphone, e-mail et itinéraire." />
+  <!-- Styles minimalistes assortis -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo_C_emblem_dark_32.png">
+  <style>
+    :root{--bg:#0B0B0F;--fg:#F5F5F7;--gold:#CBA135;--line:rgba(255,255,255,.15);--card:rgba(255,255,255,.04)}
+    *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    a{color:var(--gold);text-decoration:none}
+    .wrap{max-width:1000px;margin:36px auto;padding:0 20px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .badge{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--card);padding:8px 12px;border-radius:999px}
+    h1{font-size:32px;margin:10px 0 6px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+    .muted{opacity:.85}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 14px;border-radius:12px;color:var(--fg)}
+    .btn:hover{background:rgba(255,255,255,.06)}
+    #map{height:420px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+    footer{margin:28px 0 10px;font-size:.95rem;opacity:.9}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  </style>
+
+  <!-- Leaflet (carte interactive sans clé) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="badge" href="/" aria-label="Retour à l’accueil">← Accueil AJ Gourmet</a>
+      <a class="btn" href="mailto:contact@alainjanoleviahgourmet.com">✉️ contact@alainjanoleviahgourmet.com</a>
+    </header>
+
+    <h1>Contact</h1>
+    <p class="muted">Une question sur un produit, une commande ou un partenariat B2B ? Écrivez-nous ou appelez-nous.</p>
+
+    <div class="grid">
+      <!-- Infos -->
+      <section class="card">
+        <h2 style="margin-top:0">ALJANDCO (AJ Gourmet)</h2>
+        <p>
+          Adresse : <br>
+          <strong>14 rue des Tanneurs, 44220 Couëron, France</strong><br><br>
+          Téléphone : <a href="tel:+33695434930"><strong>06&nbsp;95&nbsp;43&nbsp;49&nbsp;30</strong></a><br>
+          E-mail : <a href="mailto:contact@alainjanoleviahgourmet.com">contact@alainjanoleviahgourmet.com</a><br>
+          SIRET : 819&nbsp;853&nbsp;961&nbsp;00020 — TVA : FR19819853961
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <a class="btn" id="btn-mappy" target="_blank" rel="noopener">🗺️ Itinéraire sur Mappy</a>
+          <a class="btn" id="btn-gmaps" target="_blank" rel="noopener">📍 Ouvrir dans Google Maps</a>
+        </div>
+      </section>
+
+      <!-- Carte -->
+      <section class="card" aria-label="Carte">
+        <div id="map" role="region" aria-label="Carte interactive de notre adresse"></div>
+        <p class="muted" style="margin-top:10px">Carte fournie par OpenStreetMap. Le bouton “Itinéraire sur Mappy” ouvre Mappy avec l’adresse préremplie.</p>
+      </section>
+    </div>
+
+    <footer>
+      <a href="/mentions-legales.html">Mentions légales</a> ·
+      <a href="/cgv.html">CGV</a> ·
+      <a href="/politique-confidentialite.html">Confidentialité</a>
+    </footer>
+  </div>
+
+  <script>
+    // --- Adresse cible
+    const ADDRESS = "14 rue des Tanneurs, 44220 Couëron, France";
+
+    // --- Liens externes
+    const btnMappy = document.getElementById('btn-mappy');
+    const btnGMap = document.getElementById('btn-gmaps');
+    // URL Mappy (ouverture avec recherche d’adresse)
+    btnMappy.href = "https://fr.mappy.com/#/5/M2.0/TSearch/S" + encodeURIComponent(ADDRESS);
+    // URL Google Maps (optionnel)
+    btnGMap.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ADDRESS);
+
+    // --- Carte Leaflet + géocodage Nominatim (gratuits, sans clé)
+    // On résout l’adresse -> coordonnées
+    const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encodeURIComponent(ADDRESS);
+    fetch(url, {headers:{'Accept':'application/json'}})
+      .then(r=>r.json()).then(results=>{
+        const lat = results?.[0]?.lat ? parseFloat(results[0].lat) : 47.207; // fallback Couëron approx
+        const lon = results?.[0]?.lon ? parseFloat(results[0].lon) : -1.708;
+        const map = L.map('map', {scrollWheelZoom:false}).setView([lat, lon], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+          attribution:'&copy; OpenStreetMap'
+        }).addTo(map);
+        L.marker([lat, lon]).addTo(map).bindPopup(`<b>AJ Gourmet</b><br>${ADDRESS}`);
+      })
+      .catch(()=>{
+        // Fallback si l’API geocode échoue : centre sur Couëron
+        const map = L.map('map', {scrollWheelZoom:false}).setView([47.207, -1.708], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+          attribution:'&copy; OpenStreetMap'
+        }).addTo(map);
+      });
+  </script>
+</body>
+</html>
