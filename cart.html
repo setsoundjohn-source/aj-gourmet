@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Panier – AJ Gourmet</title>
+  <meta name="description" content="Votre panier AJ Gourmet : produits, quantités, total et estimation des frais de livraison." />
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo_C_emblem_dark_32.png">
+  <style>
+    :root{--bg:#0B0B0F;--fg:#F5F5F7;--gold:#CBA135;--muted:#9CA3AF;--line:rgba(255,255,255,.15);--card:rgba(255,255,255,.04)}
+    *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    a{color:var(--fg);text-decoration:none}
+    .wrap{max-width:1100px;margin:32px auto;padding:0 20px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;position:sticky;top:0;background:rgba(11,11,15,.85);backdrop-filter:blur(8px);padding:12px 0;border-bottom:1px solid var(--line);z-index:10}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{font-weight:700;letter-spacing:.08em}
+    nav{display:flex;gap:10px;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 14px;border-radius:12px;color:var(--fg);background:transparent;cursor:pointer}
+    .btn:hover{background:rgba(255,255,255,.06)}
+    .primary{background:var(--gold);border-color:var(--gold);color:#111}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+    h1{margin:10px 0 8px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid var(--line)}
+    th{text-align:left;font-weight:700}
+    .muted{color:var(--muted)}
+    .right{text-align:right}
+    .qtybtn{min-width:34px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .pill{border:1px solid var(--line);border-radius:999px;padding:7px 10px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    input,select{background:transparent;border:1px solid var(--line);border-radius:10px;color:var(--fg);padding:10px}
+    .rates{display:flex;flex-direction:column;gap:8px}
+    .rate{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(203,161,53,.12);border:1px solid rgba(203,161,53,.35);color:var(--gold);padding:7px 10px;border-radius:999px;font-weight:700;font-size:.9rem}
+    footer{margin:28px 0 10px;font-size:.95rem;opacity:.9}
+    @media (max-width:960px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <a href="/" class="btn">← Accueil</a>
+        <div class="logo">AJ GOURMET</div>
+      </div>
+      <nav>
+        <a class="btn" href="/#catalogue">Catalogue</a>
+        <a class="btn" href="/contact.html">Contact</a>
+        <a class="btn primary" href="/cart.html" aria-current="page">🛒 Panier</a>
+      </nav>
+    </header>
+
+    <h1>Votre panier</h1>
+    <div class="grid">
+      <!-- Panier -->
+      <section class="card" id="cart-card" aria-label="Tableau panier">
+        <div id="cart-box" class="muted">Chargement du panier…</div>
+        <div class="row" style="margin-top:12px">
+          <button id="cart-clear" class="btn">Vider</button>
+          <span class="badge" id="cart-total">Total : 0,00 €</span>
+        </div>
+      </section>
+
+      <!-- Estimation / Paiement -->
+      <section class="card" aria-label="Estimation livraison et paiement">
+        <h2 style="margin-top:0">Estimation d’expédition</h2>
+        <div class="row" style="gap:12px">
+          <div class="field" style="flex:1 1 130px">
+            <label>Pays (code ISO)</label>
+            <input id="country" placeholder="Ex: FR, US, BR">
+          </div>
+          <div class="field" style="flex:1 1 160px">
+            <label>Code postal</label>
+            <input id="postal" placeholder="Ex: 75008">
+          </div>
+          <div class="field" style="flex:1 1 120px">
+            <label>Poids total (kg)</label>
+            <input id="weight" type="number" step="0.1" value="1.5">
+          </div>
+          <div class="field" style="align-self:flex-end">
+            <button id="quote" class="btn primary">Obtenir les tarifs</button>
+          </div>
+        </div>
+
+        <div id="rates" class="rates" style="margin-top:12px">
+          <div class="muted">Saisissez la destination puis cliquez sur “Obtenir les tarifs”.</div>
+        </div>
+
+        <div class="row" style="margin-top:14px">
+          <button id="checkout" class="btn">Payer (démo Stripe)</button>
+          <span class="muted">Sélectionnez un tarif avant de payer (facultatif en mode démo).</span>
+        </div>
+      </section>
+    </div>
+
+    <footer style="margin-top:24px">
+      <a href="/mentions-legales.html">Mentions légales</a> ·
+      <a href="/cgv.html">CGV</a> ·
+      <a href="/politique-confidentialite.html">Confidentialité</a> ·
+      <a href="/contact.html">Contact</a>
+    </footer>
+  </div>
+
+  <script>
+    /* ---------- PANIER ---------- */
+    const CART_KEY = 'ajg_cart_v1';
+    const money = n => Number(n||0).toFixed(2).replace('.', ',');
+
+    const getCart = () => {
+      try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+      catch { return []; }
+    };
+    const saveCart = items => localStorage.setItem(CART_KEY, JSON.stringify(items));
+
+    function computeTotal(items){
+      return items.reduce((s,i)=> s + (Number(i.amount_eur)||0) * (i.quantity||1), 0);
+    }
+
+    function renderCart(){
+      const box = document.getElementById('cart-box');
+      const totalBadge = document.getElementById('cart-total');
+      const items = getCart();
+
+      if (!items.length){
+        box.innerHTML = 'Panier vide.';
+        totalBadge.textContent = 'Total : 0,00 €';
+        return;
+      }
+
+      const rows = items.map((i,idx)=>`
+        <tr>
+          <td>${i.title || i.sku || 'Article'}</td>
+          <td class="right">
+            <button class="btn qtybtn" data-qty="${idx}" data-delta="-1">-</button>
+            <span style="display:inline-block;width:28px;text-align:center">${i.quantity||1}</span>
+            <button class="btn qtybtn" data-qty="${idx}" data-delta="1">+</button>
+          </td>
+          <td class="right">${money(i.amount_eur)} €</td>
+          <td class="right"><button class="btn" data-del="${idx}">x</button></td>
+        </tr>
+      `).join('');
+
+      box.innerHTML = `
+        <table>
+          <thead>
+            <tr><th>Produit</th><th class="right">Qté</th><th class="right">Prix</th><th></th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+          <tfoot>
+            <tr><td></td><td class="right" colspan="2"><b>Total</b></td><td class="right"><b>${money(computeTotal(items))} €</b></td></tr>
+          </tfoot>
+        </table>
+      `;
+      totalBadge.textContent = 'Total : ' + money(computeTotal(items)) + ' €';
+    }
+
+    document.addEventListener('click', (e)=>{
+      // supprimer
+      const delIdx = e.target.getAttribute?.('data-del');
+      if (delIdx !== null && delIdx !== undefined){
+        const cart = getCart(); cart.splice(Number(delIdx),1); saveCart(cart); renderCart();
+      }
+      // quantité
+      const qIdx = e.target.getAttribute?.('data-qty');
+      if (qIdx !== null && qIdx !== undefined){
+        const delta = Number(e.target.getAttribute('data-delta')||1);
+        const cart = getCart();
+        cart[qIdx].quantity = Math.max(1, (cart[qIdx].quantity||1) + delta);
+        saveCart(cart); renderCart();
+      }
+    });
+
+    document.getElementById('cart-clear')?.addEventListener('click', ()=>{
+      saveCart([]); renderCart();
+    });
+
+    /* ---------- ESTIMATION LIVRAISON ---------- */
+    const q = s => document.querySelector(s);
+    function renderRatesList(out){
+      const wrap = q('#rates');
+      if (!wrap) return;
+      if (!out || out.error){
+        wrap.innerHTML = '<div class="muted">Erreur: ' + (out?.error || 'réponse invalide') + '</div>';
+        return;
+      }
+      const rates = Array.isArray(out.rates) ? out.rates : [];
+      if (!rates.length){
+        wrap.innerHTML = '<div class="muted">Aucun tarif retourné ('+(out.mode||'demo')+').</div>';
+        return;
+      }
+      wrap.innerHTML = rates.map((r,idx)=>`
+        <label class="rate">
+          <span>${r.carrier} — ${r.service||'service'} ${r.days? '('+r.days+' j)' : ''}</span>
+          <span><b>${Number(r.price_eur).toFixed(2)} €</b>
+            <input type="radio" name="shiprate" value="${idx}" style="margin-left:8px"></span>
+        </label>
+      `).join('');
+      // pré-sélection 1er
+      const first = wrap.querySelector('input[name="shiprate"]'); if (first) first.checked = true;
+    }
+
+    q('#quote')?.addEventListener('click', async ()=>{
+      const country = (q('#country')?.value || '').trim().toUpperCase();
+      const postal  = (q('#postal')?.value  || '').trim();
+      const weight  = Math.max(0.1, parseFloat(q('#weight')?.value || '1.5'));
+      q('#rates').innerHTML = '<div class="muted">Calcul en cours…</div>';
+      try{
+        const res = await fetch('/api/rates', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ country, postal, weight_kg: weight })
+        });
+        const out = await res.json().catch(()=>null);
+        renderRatesList(out || {error:'Réponse vide'});
+        // on garde le dernier résultat en mémoire pour l’envoyer au checkout
+        window.__lastRates = out;
+      }catch(e){
+        q('#rates').innerHTML = '<div class="muted">Erreur réseau: '+e.message+'</div>';
+      }
+    });
+
+    /* ---------- CHECKOUT ---------- */
+    q('#checkout')?.addEventListener('click', async ()=>{
+      const items = getCart();
+      if (!items.length) return alert('Panier vide.');
+      // récupère le tarif choisi si dispo
+      let selectedRate = null;
+      const radios = document.querySelectorAll('input[name="shiprate"]');
+      radios.forEach(r => { if (r.checked && window.__lastRates?.rates?.[r.value]) selectedRate = window.__lastRates.rates[r.value]; });
+
+      try{
+        const r = await fetch('/api/create-checkout', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ items, shipping_rate: selectedRate || null })
+        });
+        const out = await r.json();
+        if (out.url) location.href = out.url;
+        else alert(out.error || 'Paiement indisponible');
+      }catch(e){
+        alert('Erreur réseau: '+e.message);
+      }
+    });
+
+    // init
+    renderCart();
+  </script>
+</body>
+</html>
