@@ -79,7 +79,8 @@
           </div>
           <div class="field" style="flex:1 1 120px">
             <label>Poids total (kg)</label>
-            <input id="weight" type="number" step="0.1" value="1.5">
+            <input id="weight" type="number" step="0.1" value="1.5" title="Auto-rempli à partir des articles du panier (modifiable)">
+          <small class="muted" id="auto-weight-note" style="display:block"></small>
           </div>
           <div class="field" style="align-self:flex-end">
             <button id="quote" class="btn primary">Obtenir les tarifs</button>
