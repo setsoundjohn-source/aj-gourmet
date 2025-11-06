@@ -110,6 +110,74 @@
     /* ---------- PANIER ---------- */
     const CART_KEY = 'ajg_cart_v1';
     const money = n => Number(n||0).toFixed(2).replace('.', ',');
+    /* ---------- TABLE DE POIDS PAR SKU (kg) ---------- */
+/* Priorité: item.weight_kg > WEIGHT_BY_SKU[sku] > DEFAULT_ITEM_WEIGHT */
+const DEFAULT_ITEM_WEIGHT = 0.5;
+
+const WEIGHT_BY_SKU = {
+  // --- Charcuterie & épicerie (site-data)
+  "SAL-NAT-250": 0.35,
+  "SAL-TRUF-250": 0.35,
+  "COND-MOUT-DIJ-200": 0.35,
+  "CONF-FIG-250": 0.45,
+
+  // --- Foie gras
+  "FOG-ENT-180": 0.55,
+  "FOG-BLOC-200": 0.40,
+
+  // --- Caviar
+  "CAV-BAE-30": 0.20,
+  "CAV-OSC-50": 0.25,
+
+  // --- Vins & spiritueux
+  "VIN-BDX-R-075": 1.60,
+  "VIN-CHMP-BRUT-075": 1.80,
+  "SPI-COG-VSOP-070": 1.50,
+
+  // --- Coffret
+  "BOX-APERO-001": 1.80,
+
+  // --- Multimedia (boîtes + protections)
+  "PHN-IPH-PRO-256": 0.60,
+  "PHN-SAM-S-ULTRA-256": 0.62,
+  "EAR-TWS-PREM": 0.25,
+  "WATCH-PREM-45": 0.40,
+  "TAB-11-256": 0.90,
+  "LAP-14-PRO": 2.10,
+
+  // --- Tes 3 boutons d'exemple (index.html)
+  "FG125": 0.20,   // Foie gras 125g (approx)
+  "CVR30": 0.20,   // Caviar 30g
+  "BOR75": 1.60    // Bordeaux 75cl
+};
+
+/* Calcule le poids total (kg) du panier courant */
+function computeCartWeight(items){
+  return items.reduce((sum, it) => {
+    const qty = Number(it.quantity || 1);
+    const sku = (it.sku || '').trim();
+    const fromItem = (typeof it.weight_kg === 'number') ? it.weight_kg : null;
+    const fromTable = sku && WEIGHT_BY_SKU[sku] ? WEIGHT_BY_SKU[sku] : null;
+    const w = (fromItem ?? fromTable ?? DEFAULT_ITEM_WEIGHT);
+    return sum + qty * Number(w);
+  }, 0);
+}
+
+/* Met à jour le champ #weight et l’info “Poids auto” */
+function updateWeightField(){
+  const items = getCart();
+  const totalKg = computeCartWeight(items);
+  const inp = document.getElementById('weight');
+  const note = document.getElementById('auto-weight-note');
+  if (inp){
+    // arrondi au 0.1 le plus proche
+    const rounded = Math.max(0.1, Math.round(totalKg * 10) / 10);
+    inp.value = rounded.toString();
+  }
+  if (note){
+    note.textContent = `Poids auto estimé : ${totalKg.toFixed(2)} kg (modifiable)`;
+  }
+}
 
     const getCart = () => {
       try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
@@ -130,6 +198,7 @@
         box.innerHTML = 'Panier vide.';
         totalBadge.textContent = 'Total : 0,00 €';
         return;
+        updateWeightField();
       }
 
       const rows = items.map((i,idx)=>`
