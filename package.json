@@ -1,0 +1,11 @@
+{
+  "name": "aj-gourmet",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "next start"
+  },
+  "dependencies": {
+    "@easypost/api": "^5.0.0"
+  }
+}
